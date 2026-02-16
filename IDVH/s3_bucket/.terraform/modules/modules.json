@@ -1,1 +1,1 @@
-{"Modules":[{"Key":"","Source":"","Dir":"."},{"Key":"idh_loader","Source":"../01_idvh_loader","Dir":"../01_idvh_loader"}]}
+{"Modules":[{"Key":"","Source":"","Dir":"."},{"Key":"idh_loader","Source":"../01_idvh_loader","Dir":"../01_idvh_loader"},{"Key":"s3_bucket_raw","Source":"git::https://github.com/terraform-aws-modules/terraform-aws-s3-bucket.git?ref=5475b21947c1c895891f1761a70dfe2bb87c3ac6","Dir":".terraform/modules/s3_bucket_raw"}]}
