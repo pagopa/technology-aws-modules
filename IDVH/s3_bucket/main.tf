@@ -22,7 +22,7 @@ locals {
   ])
 
   bucket_name_composed = substr(join("-", local.bucket_name_parts), 0, 63)
-  bucket_name          = regexreplace(local.bucket_name_composed, "-+$", "")
+  bucket_name          = replace(local.bucket_name_composed, "/-+$/", "")
 
   lifecycle_rule = var.lifecycle_rule != null ? var.lifecycle_rule : try(local.idh_config.lifecycle_rule, [])
 }
