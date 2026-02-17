@@ -1,6 +1,4 @@
 standard:
-  name_prefix: ""
-  name_suffix: ""
   append_account_id_suffix: true
   force_destroy: false
   versioning_enabled: true

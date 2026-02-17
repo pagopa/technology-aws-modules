@@ -1,8 +1,8 @@
 module "idvh_loader" {
   source = "../01_idvh_loader"
 
-  product_name      = var.product_name
-  env               = var.env
+  product_name       = var.product_name
+  env                = var.env
   idvh_resource_tier = var.idvh_resource_tier
   idvh_resource_type = "lambda"
 }
@@ -27,7 +27,6 @@ locals {
   required_code_bucket_keys = toset([
     "enabled",
     "idvh_resource_tier",
-    "name_prefix",
     "name_suffix",
   ])
   required_deploy_role_keys = toset([
@@ -46,12 +45,14 @@ locals {
   effective_timeout       = tonumber(local.idvh_config.timeout)
   effective_publish       = tobool(local.idvh_config.publish)
 
-  effective_create_code_bucket = tobool(local.idvh_config.code_bucket.enabled)
-  effective_code_bucket_tier   = tostring(local.idvh_config.code_bucket.idvh_resource_tier)
+  effective_create_code_bucket      = tobool(local.idvh_config.code_bucket.enabled)
+  effective_code_bucket_tier        = tostring(local.idvh_config.code_bucket.idvh_resource_tier)
+  effective_code_bucket_name_prefix = try(tostring(local.idvh_config.code_bucket.name_prefix), null)
+  effective_code_bucket_name_suffix = tostring(local.idvh_config.code_bucket.name_suffix)
   requested_code_bucket_basename = join("-", compact([
-    tostring(local.idvh_config.code_bucket.name_prefix),
+    local.effective_code_bucket_name_prefix,
     var.name,
-    tostring(local.idvh_config.code_bucket.name_suffix),
+    local.effective_code_bucket_name_suffix,
   ]))
 
   attach_network_policy = length(var.vpc_subnet_ids) > 0 && length(var.vpc_security_group_ids) > 0
@@ -69,8 +70,8 @@ module "code_bucket" {
   count  = local.effective_create_code_bucket ? 1 : 0
   source = "../s3_bucket"
 
-  product_name      = var.product_name
-  env               = var.env
+  product_name       = var.product_name
+  env                = var.env
   idvh_resource_tier = local.effective_code_bucket_tier
 
   name = local.requested_code_bucket_basename

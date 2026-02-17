@@ -23,7 +23,7 @@ check "lambda_yaml_types" {
       can(tonumber(local.idvh_config.cloudwatch_logs_retention_in_days)) &&
       can(tobool(local.idvh_config.code_bucket.enabled)) &&
       can(tostring(local.idvh_config.code_bucket.idvh_resource_tier)) &&
-      can(tostring(local.idvh_config.code_bucket.name_prefix)) &&
+      (can(local.idvh_config.code_bucket.name_prefix) ? can(tostring(local.idvh_config.code_bucket.name_prefix)) : true) &&
       can(tostring(local.idvh_config.code_bucket.name_suffix)) &&
       can(tobool(local.idvh_config.deploy_role.enabled)) &&
       can([for action in local.idvh_config.deploy_role.lambda_actions : tostring(action)])
