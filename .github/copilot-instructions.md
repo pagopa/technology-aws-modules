@@ -34,6 +34,11 @@ You are an expert software/platform engineer. Optimize for secure, consistent, a
 - Python/Java/Node.js: run unit tests relevant to the change.
 - Run `.github/scripts/validate-copilot-customizations.sh` for customization changes.
 
+## GitHub Operations
+- When asked to "create", "write", or "summarize" a Pull Request, always attempt to update the remote description using the GitHub CLI (`gh`).
+- Use the `gh pr edit <number> --body-file <temp_file>` pattern for robust multi-line updates.
+- Verify the active PR number before proceeding.
+
 ## IDVH addendum
 - For `IDVH/**`, enforce `.github/instructions/idvh.instructions.md` and the `idvh-terraform` skill.
 - See those files for all IDVH-specific rules; do not duplicate them here.

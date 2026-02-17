@@ -47,3 +47,8 @@ description: Produce concise, complete pull request descriptions aligned with th
 - Ensure every required section heading is present.
 - Ensure `Changes` has concise bullets describing the real diff.
 - Ensure risk and rollback are explicit and actionable.
+
+## Operations
+- If an active PR is detected (via `gh pr view` or context), update the description using `gh pr edit 4 --body-file <temp_file_path>`.
+- Use a temporary Markdown file for complex multiline descriptions to avoid escaping issues in terminals.
+- Always check the current PR body before overriding to ensure critical existing notes aren't lost.
