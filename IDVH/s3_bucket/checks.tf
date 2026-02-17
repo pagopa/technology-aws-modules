@@ -1,3 +1,25 @@
+locals {
+  idvh_config = module.idvh_loader.idvh_resource_configuration
+
+  required_tier_keys = toset([
+    "append_account_id_suffix",
+    "force_destroy",
+    "versioning_enabled",
+    "object_ownership",
+    "block_public_acls",
+    "block_public_policy",
+    "ignore_public_acls",
+    "restrict_public_buckets",
+    "attach_deny_insecure_transport_policy",
+    "attach_require_latest_tls_policy",
+    "sse_algorithm",
+    "bucket_key_enabled",
+    "lifecycle_rule",
+  ])
+
+  missing_tier_keys = setsubtract(local.required_tier_keys, toset(keys(local.idvh_config)))
+}
+
 check "s3_bucket_yaml_required_keys" {
   assert {
     condition     = length(local.missing_tier_keys) == 0
@@ -32,11 +54,10 @@ check "s3_bucket_yaml_types" {
 check "s3_bucket_yaml_values" {
   assert {
     condition = (
-      contains(["BucketOwnerEnforced", "BucketOwnerPreferred", "ObjectWriter"], local.effective_object_ownership) &&
-      (var.kms_key_arn != null || contains(["AES256", "aws:kms"], local.effective_sse_algorithm))
+      contains(["BucketOwnerEnforced", "BucketOwnerPreferred", "ObjectWriter"], try(local.idvh_config.object_ownership, "")) &&
+      (var.kms_key_arn != null || contains(["AES256", "aws:kms"], try(local.idvh_config.sse_algorithm, "")))
     )
 
     error_message = "Invalid s3_bucket tier YAML values. object_ownership must be one of BucketOwnerEnforced/BucketOwnerPreferred/ObjectWriter and sse_algorithm must be AES256 or aws:kms when kms_key_arn is not provided."
   }
 }
-

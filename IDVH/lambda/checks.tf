@@ -1,3 +1,35 @@
+locals {
+  idvh_config = module.idvh_loader.idvh_resource_configuration
+
+  required_tier_keys = toset([
+    "runtime",
+    "handler",
+    "architectures",
+    "memory_size",
+    "timeout",
+    "publish",
+    "ignore_source_code_hash",
+    "cloudwatch_logs_retention_in_days",
+    "code_bucket",
+    "deploy_role",
+  ])
+  required_code_bucket_keys = toset([
+    "enabled",
+    "idvh_resource_tier",
+    "name_suffix",
+  ])
+  required_deploy_role_keys = toset([
+    "enabled",
+    "lambda_actions",
+  ])
+
+  missing_tier_keys        = setsubtract(local.required_tier_keys, toset(keys(local.idvh_config)))
+  missing_code_bucket_keys = can(local.idvh_config.code_bucket) ? setsubtract(local.required_code_bucket_keys, toset(keys(local.idvh_config.code_bucket))) : local.required_code_bucket_keys
+  missing_deploy_role_keys = can(local.idvh_config.deploy_role) ? setsubtract(local.required_deploy_role_keys, toset(keys(local.idvh_config.deploy_role))) : local.required_deploy_role_keys
+
+  create_code_bucket = try(local.idvh_config.code_bucket.enabled, false)
+}
+
 check "lambda_yaml_required_keys" {
   assert {
     condition = (
@@ -48,7 +80,7 @@ check "lambda_yaml_values" {
 
 check "external_code_bucket_inputs" {
   assert {
-    condition     = local.effective_create_code_bucket || (var.existing_code_bucket_name != null && var.existing_code_bucket_arn != null)
+    condition     = local.create_code_bucket || (var.existing_code_bucket_name != null && var.existing_code_bucket_arn != null)
     error_message = "For tiers with code_bucket.enabled=false, both existing_code_bucket_name and existing_code_bucket_arn are required."
   }
 }
