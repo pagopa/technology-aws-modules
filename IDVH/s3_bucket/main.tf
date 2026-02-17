@@ -26,6 +26,8 @@ locals {
 }
 
 module "s3_bucket_raw" {
+  # Release URL: https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/releases/tag/v5.10.0
+  # Pinned commit: https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/commit/b040965a526e22a78784840c2f2ae384f2a8e4ef
   source = "git::https://github.com/terraform-aws-modules/terraform-aws-s3-bucket.git?ref=b040965a526e22a78784840c2f2ae384f2a8e4ef"
 
   bucket        = local.bucket_name

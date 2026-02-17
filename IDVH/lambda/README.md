@@ -15,144 +15,45 @@ This module uses:
 
 The full catalog is in [LIBRARY.md](./LIBRARY.md).
 
-Currently available tiers for `onemail`:
-
-| Environment | Tier | Runtime | Memory | Timeout | Code bucket |
-|:-----------:|:----:|:-------:|:------:|:-------:|:-----------:|
-| `dev` | `standard` | `provided.al2023` | `512` | `30` | created by module |
-| `dev` | `standard_external_code_bucket` | `provided.al2023` | `512` | `30` | external bucket required |
-| `uat` | `standard` | `provided.al2023` | `512` | `30` | created by module |
-| `uat` | `standard_external_code_bucket` | `provided.al2023` | `512` | `30` | external bucket required |
-| `prod` | `standard` | `provided.al2023` | `1024` | `60` | created by module |
-| `prod` | `standard_external_code_bucket` | `provided.al2023` | `1024` | `60` | external bucket required |
-
-## Examples for each available tier
-
-### `dev` + `standard`
+## Example: tier with managed code bucket
 
 ```hcl
-module "onemail_lambda_dev_standard" {
-  source = "./IDVH/lambda"
+module "lambda_standard" {
+  source = "git::https://github.com/your-org/your-terraform-modules.git//IDVH/lambda?ref=main"
 
-  product_name       = "onemail"
+  product_name       = "example"
   env                = "dev"
   idvh_resource_tier = "standard"
 
-  name         = "onemail-dev-lambda"
+  name         = "example-dev-lambda"
   package_path = "./artifacts/lambda.zip"
 
   tags = {
-    Project = "onemail"
+    Project = "example"
     Env     = "dev"
   }
 }
 ```
 
-### `dev` + `standard_external_code_bucket`
+## Example: tier with external code bucket
 
 ```hcl
-module "onemail_lambda_dev_external_bucket" {
-  source = "./IDVH/lambda"
+module "lambda_external_code_bucket" {
+  source = "git::https://github.com/your-org/your-terraform-modules.git//IDVH/lambda?ref=main"
 
-  product_name       = "onemail"
+  product_name       = "example"
   env                = "dev"
   idvh_resource_tier = "standard_external_code_bucket"
 
-  name         = "onemail-dev-lambda"
+  name         = "example-dev-lambda"
   package_path = "./artifacts/lambda.zip"
 
-  existing_code_bucket_name = "onemail-dev-code-bucket"
-  existing_code_bucket_arn  = "arn:aws:s3:::onemail-dev-code-bucket"
+  existing_code_bucket_name = "example-dev-code-bucket"
+  existing_code_bucket_arn  = "arn:aws:s3:::example-dev-code-bucket"
 
   tags = {
-    Project = "onemail"
+    Project = "example"
     Env     = "dev"
-  }
-}
-```
-
-### `uat` + `standard`
-
-```hcl
-module "onemail_lambda_uat_standard" {
-  source = "./IDVH/lambda"
-
-  product_name       = "onemail"
-  env                = "uat"
-  idvh_resource_tier = "standard"
-
-  name         = "onemail-uat-lambda"
-  package_path = "./artifacts/lambda.zip"
-
-  tags = {
-    Project = "onemail"
-    Env     = "uat"
-  }
-}
-```
-
-### `uat` + `standard_external_code_bucket`
-
-```hcl
-module "onemail_lambda_uat_external_bucket" {
-  source = "./IDVH/lambda"
-
-  product_name       = "onemail"
-  env                = "uat"
-  idvh_resource_tier = "standard_external_code_bucket"
-
-  name         = "onemail-uat-lambda"
-  package_path = "./artifacts/lambda.zip"
-
-  existing_code_bucket_name = "onemail-uat-code-bucket"
-  existing_code_bucket_arn  = "arn:aws:s3:::onemail-uat-code-bucket"
-
-  tags = {
-    Project = "onemail"
-    Env     = "uat"
-  }
-}
-```
-
-### `prod` + `standard`
-
-```hcl
-module "onemail_lambda_prod_standard" {
-  source = "./IDVH/lambda"
-
-  product_name       = "onemail"
-  env                = "prod"
-  idvh_resource_tier = "standard"
-
-  name         = "onemail-prod-lambda"
-  package_path = "./artifacts/lambda.zip"
-
-  tags = {
-    Project = "onemail"
-    Env     = "prod"
-  }
-}
-```
-
-### `prod` + `standard_external_code_bucket`
-
-```hcl
-module "onemail_lambda_prod_external_bucket" {
-  source = "./IDVH/lambda"
-
-  product_name       = "onemail"
-  env                = "prod"
-  idvh_resource_tier = "standard_external_code_bucket"
-
-  name         = "onemail-prod-lambda"
-  package_path = "./artifacts/lambda.zip"
-
-  existing_code_bucket_name = "onemail-prod-code-bucket"
-  existing_code_bucket_arn  = "arn:aws:s3:::onemail-prod-code-bucket"
-
-  tags = {
-    Project = "onemail"
-    Env     = "prod"
   }
 }
 ```

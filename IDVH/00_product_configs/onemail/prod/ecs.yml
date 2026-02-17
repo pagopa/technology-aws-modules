@@ -1,0 +1,21 @@
+standard:
+  event_mode: false
+  cpu: 2048
+  memory: 4096
+  enable_execute_command: true
+  cpu_high_scaling_adjustment: 2
+  container:
+    cpu: 1024
+    container_port: 8080
+    host_port: 8080
+    logs_retention_days: 90
+  autoscaling:
+    enable: true
+    desired_count: 3
+    min_capacity: 3
+    max_capacity: 8
+  event_autoscaling:
+    desired_count: 6
+    min_capacity: 5
+    max_capacity: 12
+  environment_variables: []

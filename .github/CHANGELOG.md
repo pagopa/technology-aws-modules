@@ -7,6 +7,16 @@ Use this format for new updates:
 - Include file/path scope when useful.
 
 ## 2026-02-17
+- Audited Copilot configuration for correctness, redundancy, and coherence.
+- Removed IDVH addendum section from `copilot-instructions.md` (fully covered by `idvh.instructions.md`).
+- Removed Script standards and Java/Node.js standards sections from `copilot-instructions.md` (covered by language-specific instruction files).
+- Removed `scripts.instructions.md` (cross-cutting rules already in bash/python instructions and global config).
+- Slimmed `skills/idvh-terraform/SKILL.md`: removed 17 duplicated mandatory rules, kept workflow and 2 unique rules with reference to `idvh.instructions.md`.
+- Slimmed `skills/idvh-terraform/references/idvh-standards.md`: removed rules duplicated from `idvh.instructions.md`, kept unique architectural detail and rationale.
+- Completed `AGENTS.md` with all 13 instruction files, 12 skills, and 12 prompts.
+- Created `IDVH/.scripts/` directory with README for shared script convention.
+- Added `idvh` profile to `repo-profiles.yml`.
+- Confirmed `.github/PULL_REQUEST_TEMPLATE.md` exists with all required section headings.
 - Added repository root `AGENTS.md` with explicit routing to Copilot instructions, IDVH standards, and reusable prompts/skills.
 - Added IDVH-specific skill `.github/skills/idvh-terraform/SKILL.md` plus reference guide `.github/skills/idvh-terraform/references/idvh-standards.md`.
 - Added IDVH auto-applied instruction file `.github/instructions/idvh.instructions.md`.

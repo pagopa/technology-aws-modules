@@ -20,6 +20,7 @@ You are an expert software/platform engineer. Optimize for secure, consistent, a
 - Preserve existing conventions.
 - Prefer early return/guard clauses.
 - Prioritize readability over clever abstractions.
+- In Terraform, prefer string interpolation over `format()` unless `format()` is strictly required.
 - Update technical docs in English when behavior changes.
 
 ## Portability
@@ -27,24 +28,17 @@ You are an expert software/platform engineer. Optimize for secure, consistent, a
 - Apply only the instruction files relevant to the files being changed.
 - Follow `.github/security-baseline.md` and `.github/DEPRECATION.md` when introducing structural changes.
 
-## Script standards (Bash/Python)
-- Apply to both create and modify flows.
-- Start with purpose + usage examples.
-- Use emoji logs for state transitions.
-- Use simple control flow and early returns.
-- Bash: always `#!/usr/bin/env bash` (never POSIX `sh`).
-- Python: add unit tests for testable logic.
-- Python: if external dependencies are used, pin versions in `requirements.txt`.
-
-## Java and Node.js standards
-- Treat as project work (services/modules/components), not script work.
-- Add a short purpose JavaDoc/comment when intent is not obvious.
-- Keep unit tests simple and BDD-like.
-- Java default: JUnit 5 with `@DisplayName` and `given_when_then` naming.
-- Node default: built-in `node:test` + `node:assert/strict` (`describe`/`it` when available).
-
 ## Validation baseline
 - Terraform: `terraform fmt` and `terraform validate`.
 - Bash: `bash -n` and `shellcheck -s bash` (if available).
 - Python/Java/Node.js: run unit tests relevant to the change.
 - Run `.github/scripts/validate-copilot-customizations.sh` for customization changes.
+
+## GitHub Operations
+- When asked to "create", "write", or "summarize" a Pull Request, always attempt to update the remote description using the GitHub CLI (`gh`).
+- Use the `gh pr edit <number> --body-file <temp_file>` pattern for robust multi-line updates.
+- Verify the active PR number before proceeding.
+
+## IDVH addendum
+- For `IDVH/**`, enforce `.github/instructions/idvh.instructions.md` and the `idvh-terraform` skill.
+- See those files for all IDVH-specific rules; do not duplicate them here.

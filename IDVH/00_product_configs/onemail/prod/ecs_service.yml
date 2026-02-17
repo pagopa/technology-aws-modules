@@ -1,0 +1,43 @@
+standard_core:
+  event_mode: false
+  cpu: 2048
+  memory: 4096
+  enable_execute_command: true
+  cpu_high_scaling_adjustment: 2
+  container:
+    cpu: 1024
+    container_port: 8080
+    host_port: 8080
+    logs_retention_days: 90
+  autoscaling:
+    enable: true
+    desired_count: 3
+    min_capacity: 3
+    max_capacity: 8
+  event_autoscaling:
+    desired_count: 6
+    min_capacity: 5
+    max_capacity: 12
+  environment_variables: []
+
+standard_internal_idp:
+  event_mode: false
+  cpu: 1024
+  memory: 2048
+  enable_execute_command: true
+  cpu_high_scaling_adjustment: 1
+  container:
+    cpu: 512
+    container_port: 8082
+    host_port: 8082
+    logs_retention_days: 90
+  autoscaling:
+    enable: true
+    desired_count: 2
+    min_capacity: 2
+    max_capacity: 4
+  event_autoscaling:
+    desired_count: 2
+    min_capacity: 2
+    max_capacity: 4
+  environment_variables: []

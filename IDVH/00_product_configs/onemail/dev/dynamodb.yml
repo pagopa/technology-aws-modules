@@ -1,0 +1,3 @@
+standard:
+  kms_ssm_enable_rotation: true
+  kms_rotation_period_in_days: 365

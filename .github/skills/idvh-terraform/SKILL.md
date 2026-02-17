@@ -14,25 +14,17 @@ description: Implement or refactor IDVH Terraform modules with catalog-driven ti
 
 ## Workflow
 1. Detect the target area: loader, module, catalog, or docs.
-2. Read `.github/skills/idvh-terraform/references/idvh-standards.md`.
+2. Read `.github/skills/idvh-terraform/references/idvh-standards.md` for architecture and baseline details.
 3. Read optional module references under `references/*-module.md` only when they exist for the target module.
-4. Keep structural settings in YAML tiers, not in Terraform variables.
-5. Keep only true dynamic overrides in module inputs.
-6. Validate YAML schema with `check` blocks and keep validation locals in `checks.tf`.
-7. Keep naming, tags, and security defaults consistent with existing IDVH modules.
-8. Add or update `.tftest.hcl` coverage for every changed module contract, check, or conditional behavior.
-9. Update docs when tier behavior, keys, or outputs change.
+4. Apply all rules from `.github/instructions/idvh.instructions.md` (auto-applied for `IDVH/**`).
+5. Keep naming, tags, and security defaults consistent with existing IDVH modules.
+6. Add or update `.tftest.hcl` coverage for every changed module contract, check, or conditional behavior.
+7. Update docs when tier behavior, keys, outputs, or module-source references change.
 
-## Mandatory rules
-- Use the loader triplet `product_name`, `env`, `idvh_resource_tier` plus `idvh_resource_type`.
-- Keep loader merge order: global common, product common, env specific.
-- Keep empty YAML parameters out of catalog files. Omit optional keys instead of using empty strings.
-- Keep `required_*` and `missing_*` validation locals in `checks.tf`.
-- Keep module `main.tf` focused on value composition and resource wiring.
+## Additional rules
+These complement `.github/instructions/idvh.instructions.md` (not duplicated here):
 - Keep Terraform variable surfaces small and explicit.
-- Keep module source pins deterministic (provider/module versions pinned).
-- For every behavioral change in `IDVH/<resource-module>` or `IDVH/01_idvh_loader`, add or update `.tftest.hcl` tests and include at least one negative-path assertion when new checks are introduced.
-- Keep repository files in English.
+- For every new validation check, include at least one negative-path `.tftest.hcl` assertion.
 
 ## Validation
 - `terraform fmt` on touched module files.
