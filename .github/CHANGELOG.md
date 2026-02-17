@@ -6,6 +6,13 @@ Use this format for new updates:
 - One bullet per meaningful change.
 - Include file/path scope when useful.
 
+## 2026-02-17
+- Added repository root `AGENTS.md` with explicit routing to Copilot instructions, IDVH standards, and reusable prompts/skills.
+- Added IDVH-specific skill `.github/skills/idvh-terraform/SKILL.md` plus reference guide `.github/skills/idvh-terraform/references/idvh-standards.md`.
+- Added IDVH auto-applied instruction file `.github/instructions/idvh.instructions.md`.
+- Added reusable prompt `.github/prompts/cs-idvh-terraform.prompt.md` for create/modify/review workflows on `IDVH/**`.
+- Refined `idvh-standards` to be fully cross-module with optional module references handled generically.
+
 ## 2026-02-07
 - Added missing global Copilot instruction files for commit messages and code review.
 - Added new instruction files: YAML, Markdown, Makefile, Scripts, Lambda.
