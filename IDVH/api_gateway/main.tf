@@ -73,7 +73,7 @@ resource "aws_api_gateway_stage" "main" {
   tags = merge(
     var.tags,
     {
-      Name = format("%s-%s", var.name, local.effective_stage_name)
+      Name = "${var.name}-${local.effective_stage_name}"
     }
   )
 }
@@ -122,7 +122,7 @@ resource "aws_api_gateway_usage_plan_key" "main" {
 }
 
 resource "aws_iam_role" "apigw" {
-  name = format("%sRole", var.name)
+  name = "${var.name}Role"
 
   assume_role_policy = <<EOF_ASSUME_ROLE
 {
@@ -143,7 +143,7 @@ EOF_ASSUME_ROLE
   tags = merge(
     var.tags,
     {
-      Name = format("%sRole", var.name)
+      Name = "${var.name}Role"
     }
   )
 }
