@@ -35,10 +35,14 @@ override_data {
 run "plan_with_mocked_aws_and_external_bucket" {
   command = plan
 
+  module {
+    source = "./"
+  }
+
   variables {
     product_name      = "onemail"
     env               = "dev"
-    idh_resource_tier = "standard_external_code_bucket"
+    idvh_resource_tier = "standard_external_code_bucket"
 
     name         = "onemail-dev-lambda-test"
     package_path = "./tests/test_lambda_packages/test.zip"
