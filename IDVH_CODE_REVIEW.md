@@ -195,7 +195,7 @@ Con tier `standard`, ogni istanza del modulo `lambda` crea un bucket S3 separato
 
 **File:** `IDVH/lambda/resource_description.info`
 
-Il campo `{code_bucket_enabled}` funziona solo grazie all'appiattimento fatto in `idvh_doc_gen.py` (`code_bucket.enabled` → `code_bucket_enabled`). Rinominare la chiave YAML rompe la doc silenziosamente (`Default.__missing__` restituisce `"-"`).
+Il campo `{code_bucket_enabled}` funziona solo grazie all'appiattimento fatto in `generate-idvh-docs.py` (`code_bucket.enabled` → `code_bucket_enabled`). Rinominare la chiave YAML rompe la doc silenziosamente (`Default.__missing__` restituisce `"-"`).
 
 ---
 
@@ -419,12 +419,12 @@ Ogni invocazione crea un virtualenv, installa `pyyaml`, esegue, distrugge. Quest
 
 **Miglioramenti:**
 1. Usare `pip install --user pyyaml` o un `requirements.txt` con caching
-2. Oppure riscrivere `idvh_doc_gen.py` senza dipendenze esterne (il YAML dei tier è semplice abbastanza per un parser minimale)
+2. Oppure riscrivere `generate-idvh-docs.py` senza dipendenze esterne (il YAML dei tier è semplice abbastanza per un parser minimale)
 3. In CI: cacheare il venv e rigenerare solo se `requirements.txt` cambia
 
 ---
 
-### C3 — `idvh_doc_gen.py` non valida lo schema YAML
+### C3 — `generate-idvh-docs.py` non valida lo schema YAML
 
 Lo script genera documentazione senza mai verificare che il YAML sia valido. Se un tier ha un campo mancante, la doc mostra `"-"` silenziosamente (grazie a `Default.__missing__`). Dovrebbe almeno loggare un warning.
 
@@ -518,7 +518,7 @@ run "rejects_missing_runtime" {
 | A5 | Architettura | Tagging IDVH automatico | Basso | Medio |
 | A3 | Architettura | Estrarre deploy role in modulo separato | Medio | Medio |
 | D3 | Catalogo | Ancore YAML per DRY nei tier | Basso | Medio |
-| C2 | Script | Fix `idvh_doc_gen.py` che skippa `common/` | Basso | Medio |
+| C2 | Script | Fix `generate-idvh-docs.py` che skippa `common/` | Basso | Medio |
 | M6 | Naming | Uniformare `idh_` → `idvh_` ovunque | Medio | Medio |
 | E1 | Testing | `.tftest.hcl` per ogni modulo | Alto | Alto |
 | B3 | Codice | Validazioni su variabili (`name`, `vpc`) | Basso | Basso |

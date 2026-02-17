@@ -1,1 +1,1 @@
-../../.scripts/terraform-aws.sh
+terraform_idvh.sh
