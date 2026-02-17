@@ -8,16 +8,6 @@ override_data {
   }
 }
 
-override_data {
-  target = data.aws_caller_identity.current
-  values = {
-    account_id = "123456789012"
-    arn        = "arn:aws:iam::123456789012:user/mock"
-    id         = "AIDAMOCKUSER"
-    user_id    = "AIDAMOCKUSER"
-  }
-}
-
 run "plan_with_standard_tier" {
   command = plan
 
@@ -30,33 +20,27 @@ run "plan_with_standard_tier" {
     env                = "dev"
     idvh_resource_tier = "standard"
 
-    vpc_id = "vpc-0123456789abcdef0"
-    private_subnets = [
-      "subnet-0123456789abcdef0",
-      "subnet-abcdef0123456789a",
-    ]
-    vpc_cidr_block = "10.0.0.0/16"
-
-    service_core_image_version = "1.0.0"
+    service_name          = "onemail-dev-core"
+    container_name        = "core"
+    image                 = "123456789012.dkr.ecr.eu-west-1.amazonaws.com/onemail-dev-core:1.0.0"
+    cluster_arn           = "arn:aws:ecs:eu-west-1:123456789012:cluster/onemail-dev-ecs-cluster"
+    private_subnets       = ["subnet-0123456789abcdef0"]
+    target_group_arn      = "arn:aws:elasticloadbalancing:eu-west-1:123456789012:targetgroup/core/1234567890abcdef"
+    nlb_security_group_id = "sg-0123456789abcdef0"
   }
 
   assert {
-    condition     = output.ecs_cluster_name == "onemail-dev-ecs-cluster"
-    error_message = "Expected ecs_cluster_name output to match tier ecs_cluster_name."
+    condition     = output.service_name == "onemail-dev-core"
+    error_message = "Expected service_name output to match input service_name."
   }
 
   assert {
-    condition     = output.core_service_name == "onemail-dev-core"
-    error_message = "Expected core_service_name output to match tier service_core.service_name."
-  }
-
-  assert {
-    condition     = output.internal_idp_service_name == null
-    error_message = "Expected internal_idp_service_name output to be null when internal IDP is disabled in the selected tier."
+    condition     = output.log_group_name == "/aws/ecs/onemail-dev-core/core"
+    error_message = "Expected log_group_name output to follow /aws/ecs/<service>/<container>."
   }
 }
 
-run "fails_when_internal_idp_enabled_without_image_version" {
+run "fails_when_service_name_is_empty" {
   command = plan
 
   module {
@@ -68,14 +52,13 @@ run "fails_when_internal_idp_enabled_without_image_version" {
     env                = "dev"
     idvh_resource_tier = "standard"
 
-    vpc_id = "vpc-0123456789abcdef0"
-    private_subnets = [
-      "subnet-0123456789abcdef0",
-    ]
-    vpc_cidr_block = "10.0.0.0/16"
-
-    service_core_image_version = "1.0.0"
-    internal_idp_enabled       = true
+    service_name          = ""
+    container_name        = "core"
+    image                 = "123456789012.dkr.ecr.eu-west-1.amazonaws.com/onemail-dev-core:1.0.0"
+    cluster_arn           = "arn:aws:ecs:eu-west-1:123456789012:cluster/onemail-dev-ecs-cluster"
+    private_subnets       = ["subnet-0123456789abcdef0"]
+    target_group_arn      = "arn:aws:elasticloadbalancing:eu-west-1:123456789012:targetgroup/core/1234567890abcdef"
+    nlb_security_group_id = "sg-0123456789abcdef0"
   }
 
   expect_failures = [

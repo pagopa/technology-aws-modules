@@ -1,11 +1,19 @@
 # IDVH ecs
 
-Wrapper module for ECS/ECR/NLB baseline that loads structural settings from IDVH YAML catalog using:
+Independent wrapper module for one ECS service.
+
+This module does not create ECR repositories, ECS clusters, NLBs, or deploy roles.
+It only creates and configures:
+- one ECS service
+- one CloudWatch log group
+- optional task IAM policy
+
+Structural defaults are loaded from the IDVH YAML tier using:
 - `product_name`
 - `env`
 - `idvh_resource_tier`
 
-IDVH rule: cluster/service topology, autoscaling defaults, ECR retention/mutability and deploy-role behavior are defined by the selected YAML tier.
+You compose this module with other sibling modules at a higher level.
 
 ## IDVH resources available
 [Here's](./LIBRARY.md) the list of `idvh_resource_tier` available for this module.
@@ -20,15 +28,12 @@ module "ecs" {
   env                = "dev"
   idvh_resource_tier = "standard"
 
-  vpc_id = "vpc-0123456789abcdef0"
-  private_subnets = [
-    "subnet-0123456789abcdef0",
-    "subnet-abcdef0123456789a",
-  ]
-  vpc_cidr_block = "10.0.0.0/16"
-
-  service_core_image_version = "1.0.0"
-
-  github_repository = "example-org/example-infra"
+  service_name       = "example-dev-core"
+  container_name     = "core"
+  image              = "123456789012.dkr.ecr.eu-west-1.amazonaws.com/example-dev-core:1.0.0"
+  cluster_arn        = "arn:aws:ecs:eu-west-1:123456789012:cluster/example-dev-ecs-cluster"
+  private_subnets    = ["subnet-0123456789abcdef0"]
+  target_group_arn   = "arn:aws:elasticloadbalancing:eu-west-1:123456789012:targetgroup/example/1234567890abcdef"
+  nlb_security_group_id = "sg-0123456789abcdef0"
 }
 ```

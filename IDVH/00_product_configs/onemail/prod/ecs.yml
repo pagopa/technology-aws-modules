@@ -1,84 +1,21 @@
 standard:
-  ecs_cluster_name: onemail-prod-ecs-cluster
   event_mode: false
-  enable_container_insights: true
-  fargate_capacity_providers:
-    FARGATE:
-      default_capacity_provider_strategy:
-        weight: 100
-        base: 1
-  ecr_registers:
-    - name: oneid-core
-      number_of_images_to_keep: 100
-      repository_image_tag_mutability: IMMUTABLE
-    - name: oneid-internal-idp
-      number_of_images_to_keep: 100
-      repository_image_tag_mutability: IMMUTABLE
-  service_core:
-    service_name: onemail-prod-core
-    cpu: 2048
-    memory: 4096
-    enable_execute_command: true
-    cpu_high_scaling_adjustment: 2
-    container:
-      name: oneid-core
-      cpu: 1024
-      image_name: oneid-core
-      container_port: 8080
-      host_port: 8080
-      logs_retention_days: 90
-    autoscaling:
-      enable: true
-      desired_count: 3
-      min_capacity: 3
-      max_capacity: 8
-    event_autoscaling:
-      desired_count: 6
-      min_capacity: 5
-      max_capacity: 12
-    environment_variables: []
-  internal_idp_enabled: true
-  service_internal_idp:
-    service_name: onemail-prod-internal-idp
+  cpu: 2048
+  memory: 4096
+  enable_execute_command: true
+  cpu_high_scaling_adjustment: 2
+  container:
     cpu: 1024
-    memory: 2048
-    enable_execute_command: true
-    container:
-      name: oneid-internal-idp
-      cpu: 512
-      image_name: oneid-internal-idp
-      container_port: 8082
-      host_port: 8082
-      logs_retention_days: 90
-    autoscaling:
-      enable: true
-      desired_count: 2
-      min_capacity: 2
-      max_capacity: 4
-    environment_variables: []
-  nlb:
-    name: onemail-prod-nlb
-    internal: true
-    cross_zone_enabled: true
-    dns_record_client_routing_policy: availability_zone_affinity
-    target_health_path: /q/health/live
-    deregistration_delay: 10
-    enable_deletion_protection: true
-  deploy_role:
-    enabled: true
-    ecr_actions:
-      - ecr:BatchCheckLayerAvailability
-      - ecr:BatchGetImage
-      - ecr:CompleteLayerUpload
-      - ecr:DescribeImages
-      - ecr:GetAuthorizationToken
-      - ecr:InitiateLayerUpload
-      - ecr:ListImages
-      - ecr:PutImage
-      - ecr:TagResource
-      - ecr:UploadLayerPart
-    ecs_actions:
-      - ecs:DescribeTaskDefinition
-      - ecs:RegisterTaskDefinition
-      - ecs:DescribeServices
-      - ecs:UpdateService
+    container_port: 8080
+    host_port: 8080
+    logs_retention_days: 90
+  autoscaling:
+    enable: true
+    desired_count: 3
+    min_capacity: 3
+    max_capacity: 8
+  event_autoscaling:
+    desired_count: 6
+    min_capacity: 5
+    max_capacity: 12
+  environment_variables: []

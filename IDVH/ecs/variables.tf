@@ -18,89 +18,59 @@ variable "idvh_resource_tier" {
   description = "(Required) The IDVH resource tier key to be created"
 }
 
-variable "vpc_id" {
+variable "service_name" {
   type        = string
-  description = "(Required) VPC identifier used by ECS services and NLB"
+  description = "(Required) ECS service name"
+}
+
+variable "container_name" {
+  type        = string
+  description = "(Required) Main container name"
+}
+
+variable "image" {
+  type        = string
+  description = "(Required) Full container image URI including tag"
+}
+
+variable "cluster_arn" {
+  type        = string
+  description = "(Required) ECS cluster ARN hosting the service"
 }
 
 variable "private_subnets" {
   type        = list(string)
-  description = "(Required) Private subnet IDs used by ECS services and NLB"
+  description = "(Required) Private subnet IDs used by the ECS service"
 }
 
-variable "vpc_cidr_block" {
+variable "target_group_arn" {
   type        = string
-  description = "(Required) CIDR block of the target VPC"
+  description = "(Required) NLB target group ARN attached to the ECS service"
 }
 
-variable "service_core_image_version" {
+variable "nlb_security_group_id" {
   type        = string
-  description = "(Required) Container image tag/version for service_core container"
+  description = "(Required) NLB security group ID used for ECS ingress rules"
 }
 
-variable "service_internal_idp_image_version" {
-  type        = string
-  description = "(Optional) Container image tag/version for service_internal_idp container. Required only when internal IDP is enabled."
-  default     = null
-}
-
-variable "service_core_environment_variables" {
+variable "environment_variables" {
   type = list(object({
     name  = string
     value = string
   }))
-  description = "(Optional) Additional environment variables appended to service_core tier defaults"
+  description = "(Optional) Additional environment variables appended to tier defaults"
   default     = []
 }
 
-variable "service_internal_idp_environment_variables" {
-  type = list(object({
-    name  = string
-    value = string
-  }))
-  description = "(Optional) Additional environment variables appended to service_internal_idp tier defaults"
-  default     = []
-}
-
-variable "service_core_task_policy_json" {
+variable "task_policy_json" {
   type        = string
-  description = "(Optional) IAM policy JSON attached to the ECS core task role"
-  default     = null
-}
-
-variable "service_internal_idp_task_policy_json" {
-  type        = string
-  description = "(Optional) IAM policy JSON attached to the ECS internal IDP task role"
+  description = "(Optional) IAM policy JSON attached to the ECS task role"
   default     = null
 }
 
 variable "event_mode" {
   type        = bool
   description = "(Optional) Dynamic event-mode override. If null, event_mode from IDVH tier YAML is used."
-  default     = null
-}
-
-variable "internal_idp_enabled" {
-  type        = bool
-  description = "(Optional) Dynamic internal-idp toggle override. If null, the YAML tier value is used."
-  default     = null
-}
-
-variable "ecs_cluster_name" {
-  type        = string
-  description = "(Optional) Dynamic ECS cluster name override"
-  default     = null
-}
-
-variable "nlb_name" {
-  type        = string
-  description = "(Optional) Dynamic NLB name override"
-  default     = null
-}
-
-variable "github_repository" {
-  type        = string
-  description = "(Optional) GitHub repository in format org/repo. Used only when deploy_role.enabled is true in the selected tier."
   default     = null
 }
 

@@ -1,1 +1,1 @@
-Cluster: {ecs_cluster_name}, insights: {enable_container_insights}, core autoscaling: {service_core_autoscaling_min_capacity}-{service_core_autoscaling_max_capacity}, internal idp: {internal_idp_enabled}, nlb: {nlb_name}
+CPU: {cpu}, memory: {memory}, autoscaling: {autoscaling_min_capacity}-{autoscaling_max_capacity}, event mode: {event_mode}
