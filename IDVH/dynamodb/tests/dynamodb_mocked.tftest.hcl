@@ -12,29 +12,28 @@ run "plan_with_standard_tier" {
     env                = "dev"
     idvh_resource_tier = "standard"
 
-    name      = "onemail-dev-table"
-    hash_key  = "pk"
-    range_key = "sk"
+    idp_entity_ids = ["https://idp.example.com/metadata"]
 
-    attributes = [
+    clients = [
       {
-        name = "pk"
-        type = "S"
-      },
-      {
-        name = "sk"
-        type = "S"
+        client_id     = "client-app"
+        friendly_name = "Client App"
       }
     ]
   }
 
   assert {
-    condition     = output.table_name == "onemail-dev-table"
-    error_message = "Expected table_name output to match the provided table name."
+    condition     = output.table_sessions_name == "Sessions"
+    error_message = "Expected sessions table output to match the aligned module settings."
+  }
+
+  assert {
+    condition     = output.table_client_registrations_name == "ClientRegistrations"
+    error_message = "Expected client registrations table output to match the aligned module settings."
   }
 }
 
-run "fails_with_missing_hash_key_attribute" {
+run "fails_with_empty_idp_entity_id" {
   command = plan
 
   module {
@@ -46,19 +45,10 @@ run "fails_with_missing_hash_key_attribute" {
     env                = "dev"
     idvh_resource_tier = "standard"
 
-    name      = "onemail-dev-table"
-    hash_key  = "pk"
-    range_key = "sk"
-
-    attributes = [
-      {
-        name = "other_key"
-        type = "S"
-      }
-    ]
+    idp_entity_ids = [""]
   }
 
   expect_failures = [
-    check.dynamodb_schema_values,
+    check.dynamodb_yaml_values,
   ]
 }

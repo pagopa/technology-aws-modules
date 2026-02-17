@@ -1,1 +1,1 @@
-Billing: {billing_mode}, class: {table_class}, PITR: {point_in_time_recovery_enabled}, SSE: {server_side_encryption_enabled}, stream: {stream_enabled}
+KMS rotation: {kms_rotation_period_in_days} days, sessions stream: {sessions_table_stream_enabled}, client stream: {client_registrations_table_stream_enabled}, internal users stream: {internal_idp_users_table_stream_enabled}

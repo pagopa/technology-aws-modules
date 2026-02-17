@@ -1,11 +1,11 @@
 # IDVH dynamodb
 
-Wrapper module for DynamoDB that loads structural settings from IDVH YAML catalog using:
+Wrapper module for the OneIdentity DynamoDB stack that loads structural settings from IDVH YAML catalog using:
 - `product_name`
 - `env`
 - `idvh_resource_tier`
 
-IDVH rule: billing/encryption/protection defaults are defined by the selected YAML tier.
+IDVH rule: table protection/stream/PITR/KMS defaults are defined by the selected YAML tier.
 
 ## IDVH resources available
 [Here's](./LIBRARY.md) the list of `idvh_resource_tier` available for this module.
@@ -20,23 +20,13 @@ module "dynamodb" {
   env                = "dev"
   idvh_resource_tier = "standard"
 
-  name     = "onemail-dev-table"
-  hash_key = "pk"
-  range_key = "sk"
+  idp_entity_ids = ["https://idp.example.com/metadata"]
 
-  attributes = [
+  clients = [
     {
-      name = "pk"
-      type = "S"
-    },
-    {
-      name = "sk"
-      type = "S"
+      client_id     = "client-app"
+      friendly_name = "Client App"
     }
   ]
-
-  tags = {
-    Project = "onemail"
-  }
 }
 ```
