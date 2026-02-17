@@ -14,13 +14,13 @@ IDVH rule: endpoint/stage/cache/method settings, usage plan and domain/authorize
 
 ```hcl
 module "api_gateway" {
-  source = "./IDVH/api_gateway"
+  source = "git::https://github.com/your-org/your-terraform-modules.git//IDVH/api_gateway?ref=main"
 
-  product_name       = "onemail"
+  product_name       = "example"
   env                = "dev"
   idvh_resource_tier = "standard"
 
-  name = "onemail-dev-rest-api"
+  name = "example-dev-rest-api"
   body = file("./openapi.json")
 }
 ```
