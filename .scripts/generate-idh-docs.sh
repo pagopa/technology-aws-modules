@@ -1,1 +1,0 @@
-../IDVH/.scripts/generate-idh-docs.sh

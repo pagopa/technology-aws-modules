@@ -1,1 +1,0 @@
-../IDVH/.scripts/idh_doc_gen.py
