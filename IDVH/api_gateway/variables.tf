@@ -20,13 +20,12 @@ variable "idvh_resource_tier" {
 
 variable "name" {
   type        = string
-  description = "(Required) API Gateway HTTP API name"
+  description = "(Required) REST API name"
 }
 
-variable "description" {
+variable "body" {
   type        = string
-  description = "(Optional) HTTP API description"
-  default     = null
+  description = "(Required) OpenAPI/Swagger specification body"
 }
 
 variable "stage_name" {
@@ -35,9 +34,45 @@ variable "stage_name" {
   default     = null
 }
 
-variable "access_log_format" {
+variable "endpoint_vpc_endpoint_ids" {
+  type        = list(string)
+  description = "(Optional) Dynamic VPC endpoint IDs override for PRIVATE endpoint configurations"
+  default     = null
+}
+
+variable "plan_api_key_name" {
   type        = string
-  description = "(Optional) Dynamic access log format override. If null, format from IDVH tier YAML is used."
+  description = "(Optional) Dynamic usage-plan API key name override"
+  default     = null
+}
+
+variable "custom_domain_name" {
+  type        = string
+  description = "(Optional) Dynamic custom domain override"
+  default     = null
+}
+
+variable "certificate_arn" {
+  type        = string
+  description = "(Optional) Dynamic certificate ARN override for custom domain"
+  default     = null
+}
+
+variable "api_mapping_key" {
+  type        = string
+  description = "(Optional) Dynamic API mapping key override"
+  default     = null
+}
+
+variable "api_authorizer_name" {
+  type        = string
+  description = "(Optional) Dynamic Cognito authorizer name override"
+  default     = null
+}
+
+variable "api_authorizer_user_pool_arn" {
+  type        = string
+  description = "(Optional) Dynamic Cognito user pool ARN override"
   default     = null
 }
 

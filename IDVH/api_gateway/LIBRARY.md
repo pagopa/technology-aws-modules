@@ -2,8 +2,8 @@
 
 | Product | Environment | Tier | Description |
 |:-------:|:-----------:|:----:|:------------|
-| onemail | dev | standard | Protocol: HTTP, stage: dev, auto deploy: true, access logs: true, retention: 14 days |
+| onemail | dev | standard | Endpoint: ["REGIONAL"], stage: dev, xray: false, plan rate: 100, custom domain: false |
 |---|---|---|---|
-| onemail | uat | standard | Protocol: HTTP, stage: uat, auto deploy: true, access logs: true, retention: 30 days |
+| onemail | uat | standard | Endpoint: ["REGIONAL"], stage: uat, xray: false, plan rate: 100, custom domain: false |
 |---|---|---|---|
-| onemail | prod | standard | Protocol: HTTP, stage: prod, auto deploy: true, access logs: true, retention: 90 days |
+| onemail | prod | standard | Endpoint: ["REGIONAL"], stage: prod, xray: true, plan rate: 200, custom domain: false |

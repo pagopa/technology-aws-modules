@@ -1,11 +1,11 @@
 # IDVH api_gateway
 
-Wrapper module for API Gateway HTTP API that loads structural settings from IDVH YAML catalog using:
+Wrapper module for API Gateway REST APIs that loads structural settings from IDVH YAML catalog using:
 - `product_name`
 - `env`
 - `idvh_resource_tier`
 
-IDVH rule: protocol/stage/logging defaults are defined by the selected YAML tier.
+IDVH rule: endpoint/stage/cache/method settings, usage plan and domain/authorizer defaults are defined by the selected YAML tier.
 
 ## IDVH resources available
 [Here's](./LIBRARY.md) the list of `idvh_resource_tier` available for this module.
@@ -20,10 +20,7 @@ module "api_gateway" {
   env                = "dev"
   idvh_resource_tier = "standard"
 
-  name = "onemail-dev-http-api"
-
-  tags = {
-    Project = "onemail"
-  }
+  name = "onemail-dev-rest-api"
+  body = file("./openapi.json")
 }
 ```

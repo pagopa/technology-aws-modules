@@ -1,1 +1,1 @@
-Protocol: {protocol_type}, stage: {stage_name}, auto deploy: {auto_deploy}, access logs: {access_logs_enabled}, retention: {access_logs_retention_in_days} days
+Endpoint: {endpoint_configuration_types}, stage: {stage_name}, xray: {xray_tracing_enabled}, plan rate: {plan_throttle_rate_limit}, custom domain: {custom_domain_create}

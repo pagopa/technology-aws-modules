@@ -1,31 +1,39 @@
-output "api_id" {
-  value = aws_apigatewayv2_api.this.id
+output "rest_api_id" {
+  value = aws_api_gateway_rest_api.main.id
 }
 
-output "api_arn" {
-  value = aws_apigatewayv2_api.this.arn
+output "rest_api_invoke_url" {
+  value = aws_api_gateway_stage.main.invoke_url
 }
 
-output "api_endpoint" {
-  value = aws_apigatewayv2_api.this.api_endpoint
+output "domain_name" {
+  value = try(aws_api_gateway_domain_name.main[0].domain_name, null)
 }
 
-output "api_execution_arn" {
-  value = aws_apigatewayv2_api.this.execution_arn
+output "regional_domain_name" {
+  value = try(aws_api_gateway_domain_name.main[0].regional_domain_name, null)
 }
 
-output "stage_id" {
-  value = aws_apigatewayv2_stage.this.id
+output "regional_zone_id" {
+  value = try(aws_api_gateway_domain_name.main[0].regional_zone_id, null)
 }
 
-output "stage_name" {
-  value = aws_apigatewayv2_stage.this.name
+output "rest_api_execution_arn" {
+  value = aws_api_gateway_rest_api.main.execution_arn
 }
 
-output "stage_invoke_url" {
-  value = aws_apigatewayv2_stage.this.invoke_url
+output "rest_api_name" {
+  value = aws_api_gateway_rest_api.main.name
 }
 
-output "access_log_group_name" {
-  value = try(aws_cloudwatch_log_group.api_access[0].name, null)
+output "rest_api_stage_name" {
+  value = aws_api_gateway_stage.main.stage_name
+}
+
+output "rest_api_arn" {
+  value = aws_api_gateway_rest_api.main.arn
+}
+
+output "cloudwatch_log_group_name" {
+  value = aws_cloudwatch_log_group.main.name
 }
