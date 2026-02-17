@@ -1,0 +1,20 @@
+standard:
+  enabled: true
+  ecr_actions:
+    - ecr:BatchCheckLayerAvailability
+    - ecr:BatchGetImage
+    - ecr:CompleteLayerUpload
+    - ecr:DescribeImages
+    - ecr:GetAuthorizationToken
+    - ecr:InitiateLayerUpload
+    - ecr:ListImages
+    - ecr:PutImage
+    - ecr:TagResource
+    - ecr:UploadLayerPart
+  ecs_actions:
+    - ecs:DescribeTaskDefinition
+    - ecs:RegisterTaskDefinition
+    - ecs:DescribeServices
+    - ecs:UpdateService
+  role_description: Role to deploy ECS service with GitHub Actions.
+  policy_description: Policy to allow GitHub Actions deployments on ECS service.
