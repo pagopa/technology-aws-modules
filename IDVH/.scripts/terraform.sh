@@ -1,0 +1,1 @@
+../../.scripts/terraform-aws.sh

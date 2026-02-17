@@ -1,0 +1,43 @@
+# Tier base: Lambda standard per prod con code bucket creato automaticamente da IDVH.
+standard:
+  runtime: provided.al2023
+  handler: bootstrap
+  architectures: ["x86_64"]
+  memory_size: 1024
+  timeout: 60
+  publish: true
+  ignore_source_code_hash: true
+  cloudwatch_logs_retention_in_days: 90
+  code_bucket:
+    enabled: true
+    idvh_resource_tier: standard
+    name_prefix: ""
+    name_suffix: code
+  deploy_role:
+    enabled: true
+    lambda_actions:
+      - lambda:CreateFunction
+      - lambda:UpdateFunctionCode
+      - lambda:UpdateFunctionConfiguration
+
+# Tier alternativo: Lambda standard per prod con code bucket esterno (non creato dal modulo).
+standard_external_code_bucket:
+  runtime: provided.al2023
+  handler: bootstrap
+  architectures: ["x86_64"]
+  memory_size: 1024
+  timeout: 60
+  publish: true
+  ignore_source_code_hash: true
+  cloudwatch_logs_retention_in_days: 90
+  code_bucket:
+    enabled: false
+    idvh_resource_tier: standard
+    name_prefix: ""
+    name_suffix: code
+  deploy_role:
+    enabled: true
+    lambda_actions:
+      - lambda:CreateFunction
+      - lambda:UpdateFunctionCode
+      - lambda:UpdateFunctionConfiguration

@@ -1,0 +1,1 @@
+Runtime: {runtime}, memory: {memory_size} MB, timeout: {timeout} s, publish: {publish}, code bucket: {code_bucket_enabled}
