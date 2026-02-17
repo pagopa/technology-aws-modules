@@ -1,0 +1,1 @@
+Billing: {billing_mode}, class: {table_class}, PITR: {point_in_time_recovery_enabled}, SSE: {server_side_encryption_enabled}, stream: {stream_enabled}
