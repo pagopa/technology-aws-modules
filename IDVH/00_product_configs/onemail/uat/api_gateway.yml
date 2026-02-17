@@ -1,0 +1,9 @@
+standard:
+  protocol_type: HTTP
+  disable_execute_api_endpoint: false
+  stage_name: uat
+  auto_deploy: true
+  access_logs:
+    enabled: true
+    retention_in_days: 30
+    format: '{"requestId":"$context.requestId","httpMethod":"$context.httpMethod","path":"$context.path","status":"$context.status"}'
