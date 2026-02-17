@@ -1,0 +1,14 @@
+standard:
+  fifo_queue: false
+  content_based_deduplication: false
+  delay_seconds: 0
+  max_message_size: 262144
+  message_retention_seconds: 1209600
+  receive_wait_time_seconds: 0
+  visibility_timeout_seconds: 60
+  sqs_managed_sse_enabled: true
+  kms_data_key_reuse_period_seconds: 300
+  dead_letter_queue:
+    enabled: true
+    max_receive_count: 5
+    name_suffix: dlq

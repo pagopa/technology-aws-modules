@@ -1,0 +1,1 @@
+FIFO: {fifo_queue}, retention: {message_retention_seconds}s, visibility timeout: {visibility_timeout_seconds}s, DLQ enabled: {dead_letter_queue_enabled}
