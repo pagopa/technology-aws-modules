@@ -1,5 +1,6 @@
 IDH_AZURE/
 modules_oneidentity/
+.DS_Store
 
 # Python
 __pycache__/
