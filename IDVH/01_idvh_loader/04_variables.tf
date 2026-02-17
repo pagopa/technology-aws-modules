@@ -18,22 +18,22 @@ variable "env" {
   }
 }
 
-variable "idh_resource_tier" {
+variable "idvh_resource_tier" {
   type        = string
   description = "(Required) The IDVH resource tier name chosen for the resource to be created."
 
   validation {
-    condition     = can(lookup(local.tiers_configurations, var.idh_resource_tier))
-    error_message = "Specified idh_resource_tier '${var.idh_resource_tier}' not available in catalog for given product_name: '${var.product_name}', env: '${var.env}', idh_resource_type: '${var.idh_resource_type}'"
+    condition     = can(lookup(local.tiers_configurations, var.idvh_resource_tier))
+    error_message = "Specified idvh_resource_tier '${var.idvh_resource_tier}' not available in catalog for given product_name: '${var.product_name}', env: '${var.env}', idvh_resource_type: '${var.idvh_resource_type}'"
   }
 }
 
-variable "idh_resource_type" {
+variable "idvh_resource_type" {
   type        = string
   description = "(Required) The IDVH resource category to be created."
 
   validation {
-    condition     = can(file("${path.module}/../00_product_configs/${var.product_name}/${var.env}/${var.idh_resource_type}.yml")) || can(file("${path.module}/../00_product_configs/common/${var.idh_resource_type}.yml")) || can(file("${path.module}/../00_product_configs/${var.product_name}/common/${var.idh_resource_type}.yml"))
-    error_message = "Specified idh_resource_type '${var.idh_resource_type}' not available in catalog for given product_name: '${var.product_name}' and env: '${var.env}'"
+    condition     = can(file("${path.module}/../00_product_configs/${var.product_name}/${var.env}/${var.idvh_resource_type}.yml")) || can(file("${path.module}/../00_product_configs/common/${var.idvh_resource_type}.yml")) || can(file("${path.module}/../00_product_configs/${var.product_name}/common/${var.idvh_resource_type}.yml"))
+    error_message = "Specified idvh_resource_type '${var.idvh_resource_type}' not available in catalog for given product_name: '${var.product_name}' and env: '${var.env}'"
   }
 }

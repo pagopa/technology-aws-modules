@@ -1,15 +1,15 @@
-output "idh_resource_type" {
-  value = var.idh_resource_type
+output "idvh_resource_type" {
+  value = var.idvh_resource_type
 }
 
-output "idh_resource_tier" {
-  value = var.idh_resource_tier
+output "idvh_resource_tier" {
+  value = var.idvh_resource_tier
 }
 
-output "idh_resource_configuration" {
-  value = local.tiers_configurations[var.idh_resource_tier]
+output "idvh_resource_configuration" {
+  value = local.tiers_configurations[var.idvh_resource_tier]
 }
 
-output "idh_tiers_configurations" {
+output "idvh_tiers_configurations" {
   value = local.tiers_configurations
 }
