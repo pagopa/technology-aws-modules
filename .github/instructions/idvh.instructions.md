@@ -30,7 +30,8 @@ applyTo: "IDVH/**/*.tf,IDVH/**/*.yml,IDVH/**/*.md"
 ## Validation
 - Run `terraform fmt` for touched module files.
 - Run `terraform validate` for touched modules when possible.
+- For every behavioral change in `IDVH/<resource-module>` or `IDVH/01_idvh_loader`, add or update `.tftest.hcl` coverage for the changed contract.
+- Run `terraform test` for touched IDVH modules; when a suite is missing, add the minimal suite required to validate the change.
 - Run terraform.sh for end-to-end validation of changes.
 - Scan catalog changes with `rg -n ':\s*\"\"\s*$' IDVH/00_product_configs`.
 - Update README/LIBRARY when catalog keys or tier behavior changes.
-

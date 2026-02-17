@@ -20,7 +20,8 @@ description: Implement or refactor IDVH Terraform modules with catalog-driven ti
 5. Keep only true dynamic overrides in module inputs.
 6. Validate YAML schema with `check` blocks and keep validation locals in `checks.tf`.
 7. Keep naming, tags, and security defaults consistent with existing IDVH modules.
-8. Update docs when tier behavior, keys, or outputs change.
+8. Add or update `.tftest.hcl` coverage for every changed module contract, check, or conditional behavior.
+9. Update docs when tier behavior, keys, or outputs change.
 
 ## Mandatory rules
 - Use the loader triplet `product_name`, `env`, `idvh_resource_tier` plus `idvh_resource_type`.
@@ -30,10 +31,12 @@ description: Implement or refactor IDVH Terraform modules with catalog-driven ti
 - Keep module `main.tf` focused on value composition and resource wiring.
 - Keep Terraform variable surfaces small and explicit.
 - Keep module source pins deterministic (provider/module versions pinned).
+- For every behavioral change in `IDVH/<resource-module>` or `IDVH/01_idvh_loader`, add or update `.tftest.hcl` tests and include at least one negative-path assertion when new checks are introduced.
 - Keep repository files in English.
 
 ## Validation
 - `terraform fmt` on touched module files.
 - `terraform validate` for touched modules when provider access is available.
+- `terraform test` for touched IDVH modules; if a module has no suite yet, add the minimal `.tftest.hcl` coverage needed for the change.
 - `rg -n ':\s*\"\"\s*$' IDVH/00_product_configs` to prevent empty catalog values.
 - Confirm docs and examples reflect new keys and behavior.

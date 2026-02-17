@@ -19,8 +19,9 @@ argument-hint: action=<create|modify|review> area=<loader|resource_module|catalo
 3. Keep structural behavior in YAML tiers and expose only dynamic inputs as Terraform variables.
 4. Keep validation locals and `check` blocks in `checks.tf`.
 5. Keep YAML catalog clean (no empty-string placeholders).
-6. Keep technical content and docs in English.
-7. If `action=review`, report findings first by severity, then propose minimal targeted fixes.
+6. For every behavioral change in `IDVH/<resource-module>` or `IDVH/01_idvh_loader`, add or update `.tftest.hcl` coverage for the affected module contract.
+7. Keep technical content and docs in English.
+8. If `action=review`, report findings first by severity, then propose minimal targeted fixes.
 
 ## Minimal example
 - Input: `action=modify area=resource_module objective="add tier key and validation for lifecycle defaults" target_path=IDVH/<resource-module>`
@@ -32,5 +33,6 @@ argument-hint: action=<create|modify|review> area=<loader|resource_module|catalo
 ## Validation
 - Run `terraform fmt` on touched files.
 - Run `terraform validate` for touched modules when provider access is available.
+- Run `terraform test` for touched IDVH modules. If a suite does not exist yet, create the minimal `.tftest.hcl` suite needed to validate the change.
 - Run `rg -n ':\s*\"\"\s*$' IDVH/00_product_configs` and ensure no matches.
 - Confirm README/LIBRARY examples remain aligned with actual catalog keys.

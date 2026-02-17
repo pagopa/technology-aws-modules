@@ -34,8 +34,8 @@
 - Keep catalog scans for empty placeholders as part of validation.
 
 ## Terraform testing baseline
-- Run `terraform test` for modules that already provide `.tftest.hcl` suites.
-- Add or update `.tftest.hcl` tests when changing tier contracts, checks, or conditional wiring.
+- For every behavioral change in `IDVH/<resource-module>` or `IDVH/01_idvh_loader`, add or update `.tftest.hcl` tests.
+- Run `terraform test` for every touched IDVH module. When a suite is missing, create the minimal `.tftest.hcl` suite needed to validate the change.
 - Prefer mocked provider patterns for deterministic local tests when real cloud resources are not required.
 - Keep tests focused on module contracts: required inputs, output values, and key conditional behaviors.
 - Keep at least one negative-path assertion when introducing new validation checks.
