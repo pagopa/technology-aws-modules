@@ -1,3 +1,11 @@
+#!/usr/bin/env python3
+"""Purpose: Generate IDVH LIBRARY.md files from catalog tiers.
+
+Usage examples:
+  python3 .scripts/generate-idvh-docs.py
+  IDVH_BASE_DIR=./IDVH python3 .scripts/generate-idvh-docs.py
+"""
+
 import os
 from pathlib import Path
 from collections.abc import MutableMapping

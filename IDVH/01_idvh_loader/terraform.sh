@@ -1,1 +1,1 @@
-../scripts/terraform_idvh.sh
+../.scripts/terraform_idvh.sh

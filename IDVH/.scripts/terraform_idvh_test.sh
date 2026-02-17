@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+#
+# Purpose: Run Terraform tests for an IDVH module, usually from a module tests directory.
+# Example:
+#   ./IDVH/.scripts/terraform_idvh_test.sh --module-dir <directory> --filter <nome_file_hcl>
 
 set -euo pipefail
 

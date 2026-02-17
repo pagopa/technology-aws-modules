@@ -11,7 +11,6 @@ standard:
   code_bucket:
     enabled: true
     idvh_resource_tier: standard
-    name_prefix: ""
     name_suffix: code
   deploy_role:
     enabled: true
@@ -33,7 +32,6 @@ standard_external_code_bucket:
   code_bucket:
     enabled: false
     idvh_resource_tier: standard
-    name_prefix: ""
     name_suffix: code
   deploy_role:
     enabled: true

@@ -11,11 +11,11 @@ output "lambda_log_group_name" {
 }
 
 output "code_bucket_name" {
-  value = local.effective_code_bucket_name
+  value = local.code_bucket_name
 }
 
 output "code_bucket_arn" {
-  value = local.effective_code_bucket_arn
+  value = local.code_bucket_arn
 }
 
 output "github_lambda_deploy_role_arn" {

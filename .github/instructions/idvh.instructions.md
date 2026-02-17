@@ -1,0 +1,37 @@
+---
+applyTo: "IDVH/**/*.tf,IDVH/**/*.yml,IDVH/**/*.md"
+---
+
+# IDVH Instructions
+
+## Design model
+- Treat IDVH modules as catalog-driven wrappers.
+- Keep baseline behavior in YAML tiers and keep Terraform inputs minimal.
+- Keep loader usage consistent with `product_name`, `env`, `idvh_resource_tier`, and `idvh_resource_type`.
+
+## YAML catalog rules
+- Keep YAML keys explicit and type-consistent across environments.
+- Omit empty optional keys instead of using empty strings.
+- Keep env-specific files focused on true differences only.
+- Preserve nested object schema contracts used by `check` blocks.
+
+## Module implementation rules
+- Keep validation locals and `check` blocks in `checks.tf`.
+- Keep `main.tf` focused on value composition and resource wiring.
+- Use direct `var override` or `YAML value` patterns for effective settings.
+- Avoid hardcoded environment/account specific values.
+- Preserve output contract stability for downstream modules.
+
+## Security and governance
+- Keep least-privilege IAM actions and scoped resources where possible.
+
+- Do not introduce secret values in Terraform code or YAML catalog.
+
+## Validation
+- Run `terraform fmt` for touched module files.
+- Run `terraform validate` for touched modules when possible.
+- For every behavioral change in `IDVH/<resource-module>` or `IDVH/01_idvh_loader`, add or update `.tftest.hcl` coverage for the changed contract.
+- Run `terraform test` for touched IDVH modules; when a suite is missing, add the minimal suite required to validate the change.
+- Run terraform.sh for end-to-end validation of changes.
+- Scan catalog changes with `rg -n ':\s*\"\"\s*$' IDVH/00_product_configs`.
+- Update README/LIBRARY when catalog keys or tier behavior changes.

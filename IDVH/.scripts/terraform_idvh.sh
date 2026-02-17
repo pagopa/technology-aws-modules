@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+#
+# Purpose: Run standard IDVH Terraform checks for a module (init, validate, and test).
+# Example:
+#   ./IDVH/.scripts/terraform_idvh.sh --module-dir <directory> [--skip-init] [--skip-tests]
 
 set -euo pipefail
 
