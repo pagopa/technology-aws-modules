@@ -2,6 +2,11 @@
 
 set -euo pipefail
 
+log_info() { echo "ℹ️  [IDVH] $*"; }
+log_step() { echo "🔹 [IDVH] $*"; }
+log_warn() { echo "⚠️  [IDVH] $*"; }
+log_ok() { echo "✅ [IDVH] $*"; }
+
 usage() {
   cat <<'EOF'
 Usage: terraform_idvh_test.sh [options]
@@ -36,7 +41,7 @@ while (($#)); do
   case "$1" in
     --module-dir)
       if [ $# -lt 2 ]; then
-        echo "Missing value for --module-dir" >&2
+        echo "❌ [IDVH] Missing value for --module-dir" >&2
         exit 1
       fi
       MODULE_DIR="$2"
@@ -44,7 +49,7 @@ while (($#)); do
       ;;
     --test-dir)
       if [ $# -lt 2 ]; then
-        echo "Missing value for --test-dir" >&2
+        echo "❌ [IDVH] Missing value for --test-dir" >&2
         exit 1
       fi
       TEST_DIR_NAME="$2"
@@ -52,7 +57,7 @@ while (($#)); do
       ;;
     --filter)
       if [ $# -lt 2 ]; then
-        echo "Missing value for --filter" >&2
+        echo "❌ [IDVH] Missing value for --filter" >&2
         exit 1
       fi
       FILTERS+=("$2")
@@ -91,26 +96,26 @@ else
 fi
 
 if [ ! -d "$TEST_DIR_PATH" ]; then
-  echo "⚠️  Directory test non trovata: $TEST_DIR_PATH, skip test"
+  log_warn "Test directory not found: $TEST_DIR_PATH, skipping tests"
   exit 0
 fi
 
 FIRST_TEST_FILE="$(find "$TEST_DIR_PATH" -type f -name '*.tftest.hcl' -print -quit)"
 if [ -z "$FIRST_TEST_FILE" ]; then
-  echo "⚠️  Nessun file .tftest.hcl trovato in $TEST_DIR_PATH, skip test"
+  log_warn "No .tftest.hcl file found in $TEST_DIR_PATH, skipping tests"
   exit 0
 fi
 
-echo "🧭 Modulo test: $MODULE_DIR"
-echo "🧪 Directory test: $TEST_DIR_PATH"
+log_info "Test module: $MODULE_DIR"
+log_info "Test directory: $TEST_DIR_PATH"
 
 cd "$MODULE_DIR"
 
 if [ "$SKIP_INIT" -eq 0 ]; then
-  echo "🚀 [1/2] Terraform init per test"
-  echo "   terraform init -backend=false -no-color"
+  log_step "[1/2] Terraform init for tests"
+  log_info "Command: terraform init -backend=false -no-color"
   terraform init -backend=false -no-color
-  echo "✅ Init test completato"
+  log_info "Test init completed"
 fi
 
 TEST_CMD=(terraform test "-test-directory=$TEST_DIR_NAME")
@@ -129,7 +134,7 @@ for extra_arg in "${EXTRA_ARGS[@]-}"; do
   TEST_CMD+=("$extra_arg")
 done
 
-echo "🧪 [2/2] Esecuzione test Terraform"
-echo "   ${TEST_CMD[*]}"
+log_step "[2/2] Running Terraform tests"
+log_info "Command: ${TEST_CMD[*]}"
 "${TEST_CMD[@]}"
-echo "✅ Test completati"
+log_ok "Tests completed"

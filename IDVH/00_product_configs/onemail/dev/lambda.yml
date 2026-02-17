@@ -10,7 +10,7 @@ standard:
   cloudwatch_logs_retention_in_days: 14
   code_bucket:
     enabled: true
-    idh_resource_tier: standard
+    idvh_resource_tier: standard
     name_prefix: ""
     name_suffix: code
   deploy_role:
@@ -32,7 +32,7 @@ standard_external_code_bucket:
   cloudwatch_logs_retention_in_days: 14
   code_bucket:
     enabled: false
-    idh_resource_tier: standard
+    idvh_resource_tier: standard
     name_prefix: ""
     name_suffix: code
   deploy_role:

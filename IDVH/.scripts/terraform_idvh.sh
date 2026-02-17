@@ -2,6 +2,11 @@
 
 set -euo pipefail
 
+log_info() { echo "ℹ️  [IDVH] $*"; }
+log_step() { echo "🔹 [IDVH] $*"; }
+log_warn() { echo "⚠️  [IDVH] $*"; }
+log_ok() { echo "✅ [IDVH] $*"; }
+
 usage() {
   cat <<'EOF'
 Usage: terraform_idvh.sh [options]
@@ -27,7 +32,7 @@ while (($#)); do
   case "$1" in
     --module-dir)
       if [ $# -lt 2 ]; then
-        echo "Missing value for --module-dir" >&2
+        echo "❌ [IDVH] Missing value for --module-dir" >&2
         exit 1
       fi
       MODULE_DIR="$2"
@@ -46,7 +51,7 @@ while (($#)); do
       exit 0
       ;;
     *)
-      echo "Unknown option: $1" >&2
+      echo "❌ [IDVH] Unknown option: $1" >&2
       usage
       exit 1
       ;;
@@ -57,46 +62,46 @@ MODULE_DIR="$(cd "$MODULE_DIR" && pwd -P)"
 
 FIRST_TF_FILE="$(find "$MODULE_DIR" -maxdepth 1 -type f -name '*.tf' -print -quit)"
 if [ -z "$FIRST_TF_FILE" ]; then
-  echo "❌ Nessun file Terraform (*.tf) trovato in: $MODULE_DIR" >&2
+  echo "❌ [IDVH] No Terraform files (*.tf) found in: $MODULE_DIR" >&2
   exit 1
 fi
 
-echo "📦 Modulo: $MODULE_DIR"
+log_info "Module: $MODULE_DIR"
 cd "$MODULE_DIR"
 
 if [ "$SKIP_INIT" -eq 0 ]; then
-  echo "🚀 [1/3] Terraform init"
-  echo "   terraform init -backend=false -no-color"
+  log_step "[1/3] Terraform init"
+  log_info "Command: terraform init -backend=false -no-color"
   terraform init -backend=false -no-color
-  echo "✅ Init completato"
+  log_info "Init completed"
 fi
 
-echo "🔎 [2/3] Terraform validate"
-echo "   terraform validate -no-color"
+log_step "[2/3] Terraform validate"
+log_info "Command: terraform validate -no-color"
 terraform validate -no-color
-echo "✅ Validate completato"
+log_info "Validate completed"
 
 if [ "$SKIP_TESTS" -eq 1 ]; then
-  echo "⏭️  Test saltati (--skip-tests)"
-  echo "✅ Check modulo completati"
+  log_warn "Tests skipped (--skip-tests)"
+  log_ok "Module checks completed"
   exit 0
 fi
 
 TEST_RUNNER="$MODULE_DIR/tests/terraform.sh"
 if [ -x "$TEST_RUNNER" ]; then
-  echo "🧪 [3/3] Test tramite tests/terraform.sh"
+  log_step "[3/3] Running tests through tests/terraform.sh"
   "$TEST_RUNNER" --module-dir "$MODULE_DIR" --skip-init
-  echo "✅ Check modulo completati"
+  log_ok "Module checks completed"
   exit 0
 fi
 
 if compgen -G "$MODULE_DIR/tests/*.tftest.hcl" > /dev/null; then
-  echo "🧪 [3/3] Terraform test diretto"
-  echo "   terraform test -test-directory=tests -no-color"
+  log_step "[3/3] Running Terraform tests directly"
+  log_info "Command: terraform test -test-directory=tests -no-color"
   terraform test -test-directory=tests -no-color
-  echo "✅ Check modulo completati"
+  log_ok "Module checks completed"
   exit 0
 fi
 
-echo "⚠️  Nessun test Terraform trovato in $MODULE_DIR/tests, skip test"
-echo "✅ Check modulo completati"
+log_warn "No Terraform tests found in $MODULE_DIR/tests, skipping tests"
+log_ok "Module checks completed"
