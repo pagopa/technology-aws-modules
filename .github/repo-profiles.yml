@@ -73,3 +73,22 @@ profiles:
       - skills/project-nodejs/SKILL.md
       - skills/cicd-workflow/SKILL.md
       - skills/terraform-feature/SKILL.md
+
+  idvh:
+    description: IDVH catalog-driven Terraform modules with YAML tiers and Bash scripts.
+    recommended_instructions:
+      - instructions/terraform.instructions.md
+      - instructions/idvh.instructions.md
+      - instructions/bash.instructions.md
+      - instructions/yaml.instructions.md
+      - instructions/markdown.instructions.md
+    recommended_prompts:
+      - prompts/cs-idvh-terraform.prompt.md
+      - prompts/cs-terraform.prompt.md
+      - prompts/cs-bash-script.prompt.md
+      - prompts/cs-pr-description.prompt.md
+    recommended_skills:
+      - skills/idvh-terraform/SKILL.md
+      - skills/terraform-feature/SKILL.md
+      - skills/script-bash/SKILL.md
+      - skills/pr-writing/SKILL.md
