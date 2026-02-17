@@ -2,8 +2,8 @@
 
 | Product | Environment | Tier | Description |
 |:-------:|:-----------:|:----:|:------------|
-| onemail | dev | standard | KMS rotation: 365 days, sessions stream: true, client stream: true, internal users stream: false |
+| `<product_name>` | dev | standard | KMS key rotation enabled: true, KMS rotation period: 365 days |
 |---|---|---|---|
-| onemail | uat | standard | KMS rotation: 365 days, sessions stream: true, client stream: true, internal users stream: false |
+| `<product_name>` | uat | standard | KMS key rotation enabled: true, KMS rotation period: 365 days |
 |---|---|---|---|
-| onemail | prod | standard | KMS rotation: 365 days, sessions stream: true, client stream: true, internal users stream: true |
+| `<product_name>` | prod | standard | KMS key rotation enabled: true, KMS rotation period: 365 days |
