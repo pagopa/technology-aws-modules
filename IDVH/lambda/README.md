@@ -3,7 +3,7 @@
 Wrapper module per AWS Lambda che carica configurazioni dinamiche da catalogo YAML usando:
 - `product_name`
 - `env`
-- `idh_resource_tier`
+- `idvh_resource_tier`
 
 Regola IDVH: parametri strutturali (es. `runtime`, `handler`, `architectures`, `timeout`, `publish`, retention log, creazione code bucket) sono definiti nel tier YAML.  
 Parametro dinamico principale lasciato come variabile: `memory_size`.
@@ -13,7 +13,7 @@ Il modulo usa:
 - modulo IDVH `s3_bucket` con `source = "../s3_bucket"` per il code bucket
 
 ## IDVH resources available
-[Here's](./LIBRARY.md) the list of `idh_resource_tier` available for this module.
+[Here's](./LIBRARY.md) the list of `idvh_resource_tier` available for this module.
 
 ## Example
 
@@ -23,7 +23,7 @@ module "notifications_lambda" {
 
   product_name      = "onemail"
   env               = "dev"
-  idh_resource_tier = "standard"
+  idvh_resource_tier = "standard"
 
   name         = "onemail-dev-notifications"
   package_path = "./artifacts/notifications.zip"

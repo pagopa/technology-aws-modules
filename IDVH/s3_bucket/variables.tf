@@ -13,7 +13,7 @@ variable "env" {
   description = "(Required) Environment for which the resource will be created"
 }
 
-variable "idh_resource_tier" {
+variable "idvh_resource_tier" {
   type        = string
   description = "(Required) The IDVH resource tier key to be created"
 }

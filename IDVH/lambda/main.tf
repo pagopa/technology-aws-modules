@@ -1,16 +1,16 @@
-module "idh_loader" {
+module "idvh_loader" {
   source = "../01_idvh_loader"
 
   product_name      = var.product_name
   env               = var.env
-  idh_resource_tier = var.idh_resource_tier
-  idh_resource_type = "lambda"
+  idvh_resource_tier = var.idvh_resource_tier
+  idvh_resource_type = "lambda"
 }
 
 data "aws_caller_identity" "current" {}
 
 locals {
-  idh_config = module.idh_loader.idh_resource_configuration
+  idvh_config = module.idvh_loader.idvh_resource_configuration
 
   required_tier_keys = toset([
     "runtime",
@@ -26,7 +26,7 @@ locals {
   ])
   required_code_bucket_keys = toset([
     "enabled",
-    "idh_resource_tier",
+    "idvh_resource_tier",
     "name_prefix",
     "name_suffix",
   ])
@@ -35,23 +35,23 @@ locals {
     "lambda_actions",
   ])
 
-  missing_tier_keys        = setsubtract(local.required_tier_keys, toset(keys(local.idh_config)))
-  missing_code_bucket_keys = can(local.idh_config.code_bucket) ? setsubtract(local.required_code_bucket_keys, toset(keys(local.idh_config.code_bucket))) : local.required_code_bucket_keys
-  missing_deploy_role_keys = can(local.idh_config.deploy_role) ? setsubtract(local.required_deploy_role_keys, toset(keys(local.idh_config.deploy_role))) : local.required_deploy_role_keys
+  missing_tier_keys        = setsubtract(local.required_tier_keys, toset(keys(local.idvh_config)))
+  missing_code_bucket_keys = can(local.idvh_config.code_bucket) ? setsubtract(local.required_code_bucket_keys, toset(keys(local.idvh_config.code_bucket))) : local.required_code_bucket_keys
+  missing_deploy_role_keys = can(local.idvh_config.deploy_role) ? setsubtract(local.required_deploy_role_keys, toset(keys(local.idvh_config.deploy_role))) : local.required_deploy_role_keys
 
-  effective_runtime       = tostring(local.idh_config.runtime)
-  effective_handler       = tostring(local.idh_config.handler)
-  effective_architectures = [for a in local.idh_config.architectures : tostring(a)]
-  effective_memory_size   = coalesce(var.memory_size, tonumber(local.idh_config.memory_size))
-  effective_timeout       = tonumber(local.idh_config.timeout)
-  effective_publish       = tobool(local.idh_config.publish)
+  effective_runtime       = tostring(local.idvh_config.runtime)
+  effective_handler       = tostring(local.idvh_config.handler)
+  effective_architectures = [for a in local.idvh_config.architectures : tostring(a)]
+  effective_memory_size   = coalesce(var.memory_size, tonumber(local.idvh_config.memory_size))
+  effective_timeout       = tonumber(local.idvh_config.timeout)
+  effective_publish       = tobool(local.idvh_config.publish)
 
-  effective_create_code_bucket = tobool(local.idh_config.code_bucket.enabled)
-  effective_code_bucket_tier   = tostring(local.idh_config.code_bucket.idh_resource_tier)
+  effective_create_code_bucket = tobool(local.idvh_config.code_bucket.enabled)
+  effective_code_bucket_tier   = tostring(local.idvh_config.code_bucket.idvh_resource_tier)
   requested_code_bucket_basename = join("-", compact([
-    tostring(local.idh_config.code_bucket.name_prefix),
+    tostring(local.idvh_config.code_bucket.name_prefix),
     var.name,
-    tostring(local.idh_config.code_bucket.name_suffix),
+    tostring(local.idvh_config.code_bucket.name_suffix),
   ]))
 
   attach_network_policy = length(var.vpc_subnet_ids) > 0 && length(var.vpc_security_group_ids) > 0
@@ -59,10 +59,10 @@ locals {
   effective_code_bucket_arn  = local.effective_create_code_bucket ? module.code_bucket[0].arn : var.existing_code_bucket_arn
   effective_code_bucket_name = local.effective_create_code_bucket ? module.code_bucket[0].name : var.existing_code_bucket_name
 
-  effective_create_github_deploy_role = tobool(local.idh_config.deploy_role.enabled)
+  effective_create_github_deploy_role = tobool(local.idvh_config.deploy_role.enabled)
   github_deploy_role_enabled          = local.effective_create_github_deploy_role && var.github_repository != null
 
-  deploy_lambda_actions = [for action in local.idh_config.deploy_role.lambda_actions : tostring(action)]
+  deploy_lambda_actions = [for action in local.idvh_config.deploy_role.lambda_actions : tostring(action)]
 }
 
 module "code_bucket" {
@@ -71,7 +71,7 @@ module "code_bucket" {
 
   product_name      = var.product_name
   env               = var.env
-  idh_resource_tier = local.effective_code_bucket_tier
+  idvh_resource_tier = local.effective_code_bucket_tier
 
   name = local.requested_code_bucket_basename
   tags = var.tags
@@ -90,7 +90,7 @@ module "lambda_raw" {
   create_package         = false
   local_existing_package = var.package_path
 
-  ignore_source_code_hash = tobool(local.idh_config.ignore_source_code_hash)
+  ignore_source_code_hash = tobool(local.idvh_config.ignore_source_code_hash)
   publish                 = local.effective_publish
 
   memory_size = local.effective_memory_size
@@ -98,7 +98,7 @@ module "lambda_raw" {
 
   environment_variables = var.environment_variables
 
-  cloudwatch_logs_retention_in_days = tonumber(local.idh_config.cloudwatch_logs_retention_in_days)
+  cloudwatch_logs_retention_in_days = tonumber(local.idvh_config.cloudwatch_logs_retention_in_days)
 
   attach_policy_json = var.lambda_policy_json != null
   policy_json        = var.lambda_policy_json

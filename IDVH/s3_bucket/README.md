@@ -3,12 +3,12 @@
 Wrapper module per S3 che carica configurazioni dinamiche da catalogo YAML usando:
 - `product_name`
 - `env`
-- `idh_resource_tier`
+- `idvh_resource_tier`
 
 Il modulo applica default di sicurezza dal catalogo e lascia variabili solo per parametri dinamici.
 
 ## IDVH resources available
-[Here's](./LIBRARY.md) the list of `idh_resource_tier` available for this module.
+[Here's](./LIBRARY.md) the list of `idvh_resource_tier` available for this module.
 
 ## Example
 
@@ -18,7 +18,7 @@ module "artifact_bucket" {
 
   product_name      = "onemail"
   env               = "dev"
-  idh_resource_tier = "standard"
+  idvh_resource_tier = "standard"
 
   name = "artifacts"
 
