@@ -18,6 +18,7 @@ applyTo: "**/*.tf"
 - Always add `description` to variables.
 - Use type constraints for variables.
 - Prefer `for_each` over `count` when logical keys matter.
+- Prefer string interpolation (`"${...}"`) over `format()` unless `format()` is clearly necessary.
 - Prefer data sources over hardcoded IDs.
 - Keep backend/state configuration explicit and consistent with repository standards.
 - Ensure state locking is enabled when supported by the backend.

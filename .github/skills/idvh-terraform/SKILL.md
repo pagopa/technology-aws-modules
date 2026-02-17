@@ -20,17 +20,23 @@ description: Implement or refactor IDVH Terraform modules with catalog-driven ti
 5. Keep only true dynamic overrides in module inputs.
 6. Validate YAML schema with `check` blocks and keep validation locals in `checks.tf`.
 7. Keep naming, tags, and security defaults consistent with existing IDVH modules.
-8. Keep upstream module sources pinned to commit hashes from `github.com/terraform-aws-modules` and annotate each source with the numeric release URL comment.
-9. Add or update `.tftest.hcl` coverage for every changed module contract, check, or conditional behavior.
-10. Update docs when tier behavior, keys, outputs, or module-source references change.
+8. For decomposition, prefer sibling modules under `IDVH/` and keep each module independently consumable.
+9. Prefer string interpolation over `format()` in Terraform expressions unless `format()` is necessary.
+10. Keep upstream module sources pinned to commit hashes from `github.com/terraform-aws-modules` and annotate each source with the numeric release URL comment.
+11. Add or update `.tftest.hcl` coverage for every changed module contract, check, or conditional behavior.
+12. Update docs when tier behavior, keys, outputs, or module-source references change.
 
 ## Mandatory rules
 - Use the loader triplet `product_name`, `env`, `idvh_resource_tier` plus `idvh_resource_type`.
 - Keep loader merge order: global common, product common, env specific.
 - Keep empty YAML parameters out of catalog files. Omit optional keys instead of using empty strings.
+- Keep catalog values generic and reusable; avoid project-specific identifiers in structural YAML keys.
 - Keep `required_*` and `missing_*` validation locals in `checks.tf`.
 - Keep module `main.tf` focused on value composition and resource wiring.
+- Keep modules independently consumable and single-responsibility by default.
+- Keep modules lean with a pragmatic balance: prefer clear, cohesive boundaries without excessive fragmentation.
 - Keep Terraform variable surfaces small and explicit.
+- Prefer string interpolation over `format()` unless `format()` is strictly necessary.
 - Keep module source pins deterministic with Git commit hashes from `github.com/terraform-aws-modules`.
 - Add a `Release URL` comment above each pinned source using `.../releases/tag/vX.Y.Z`.
 - Keep README usage examples external (Git source), not local `./IDVH/<module>` paths.

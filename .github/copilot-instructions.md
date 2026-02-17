@@ -20,6 +20,7 @@ You are an expert software/platform engineer. Optimize for secure, consistent, a
 - Preserve existing conventions.
 - Prefer early return/guard clauses.
 - Prioritize readability over clever abstractions.
+- In Terraform, prefer string interpolation over `format()` unless `format()` is strictly required.
 - Update technical docs in English when behavior changes.
 
 ## Portability
@@ -54,3 +55,7 @@ You are an expert software/platform engineer. Optimize for secure, consistent, a
 - Use upstream Terraform modules from `github.com/terraform-aws-modules` with Git `source` pinned by commit hash.
 - Add a numeric release URL comment above each pinned upstream module source (`.../releases/tag/vX.Y.Z`).
 - Keep IDVH README examples external and generic (no local `./IDVH/...` sources and no project-specific names).
+- Prefer splitting broad concerns into sibling modules under `IDVH/` instead of nested submodules.
+- Keep each IDVH resource module independently consumable; avoid turning it into an orchestrator unless explicitly requested.
+- Keep IDVH modules lean with pragmatic boundaries; avoid both monolithic wrappers and unnecessary module fragmentation.
+- In IDVH catalog YAML, keep only reusable configuration settings and avoid project-specific identifiers/names as structural keys.

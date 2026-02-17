@@ -4,6 +4,9 @@
 - Treat IDVH as a catalog-driven wrapper layer.
 - Keep baseline and structural parameters in YAML tiers.
 - Keep Terraform variables only for per-deployment dynamic inputs.
+- Keep modules independently consumable and single-responsibility by default.
+- Prefer decomposition through sibling modules under `IDVH/` over nested submodules.
+- Keep module boundaries pragmatic: aim for lean modules, but avoid splitting to the point of orchestration overhead.
 - Keep raw upstream modules pinned by commit hash.
 - For upstream Terraform modules, use GitHub sources under `https://github.com/terraform-aws-modules`.
 - Add a release URL comment above each pinned module source, pointing to a numeric tag (`.../releases/tag/vX.Y.Z`).
@@ -21,6 +24,7 @@
 - Avoid empty string placeholders; omit optional keys when unused.
 - Keep value types stable across environments for the same key.
 - Keep optional nested objects present only when used.
+- Keep catalog data focused on reusable settings; avoid project-specific names/identifiers in structural keys.
 
 ## File-level responsibilities
 - `main.tf`: compose effective values and wire resources.
@@ -28,6 +32,7 @@
 - `variables.tf`: typed inputs with concise descriptions.
 - `outputs.tf`: stable external contract.
 - `versions.tf`: pinned minimum versions aligned across IDVH modules.
+- Prefer string interpolation over `format()` unless `format()` is required for clarity.
 
 ## Validation baseline
 - Keep schema checks explicit with `required_*`, `missing_*`, and type/value assertions.
@@ -38,6 +43,7 @@
 ## Terraform testing baseline
 - For every behavioral change in `IDVH/<resource-module>` or `IDVH/01_idvh_loader`, add or update `.tftest.hcl` tests.
 - Run `terraform test` for every touched IDVH module. When a suite is missing, create the minimal `.tftest.hcl` suite needed to validate the change.
+- For every new IDVH module, create a minimal `.tftest.hcl` suite in the same change.
 - Prefer mocked provider patterns for deterministic local tests when real cloud resources are not required.
 - Keep tests focused on module contracts: required inputs, output values, and key conditional behaviors.
 - Keep at least one negative-path assertion when introducing new validation checks.
