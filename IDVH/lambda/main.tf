@@ -38,7 +38,7 @@ module "code_bucket" {
 }
 
 module "lambda_raw" {
-  # Release URL: https://github.com/terraform-aws-modules/terraform-aws-lambda/releases
+  # Release URL: https://github.com/terraform-aws-modules/terraform-aws-lambda/releases/tag/v8.5.0
   # Pinned commit: https://github.com/terraform-aws-modules/terraform-aws-lambda/commit/55abacb6bfa49b3be9936c0947a913489aff0050
   source = "git::https://github.com/terraform-aws-modules/terraform-aws-lambda.git?ref=55abacb6bfa49b3be9936c0947a913489aff0050"
 

@@ -21,9 +21,9 @@ locals {
 }
 
 module "kms_table_key" {
-  count   = var.create_kms_key ? 1 : 0
-  source  = "terraform-aws-modules/kms/aws"
-  version = "3.0.0"
+  count = var.create_kms_key ? 1 : 0
+  # Release URL: https://github.com/terraform-aws-modules/terraform-aws-kms/releases/tag/v3.0.0
+  source = "git::https://github.com/terraform-aws-modules/terraform-aws-kms.git?ref=8478d2dcaa81d60e6a21adeee4bc428290244f11"
 
   description             = var.kms_description
   key_usage               = "ENCRYPT_DECRYPT"
@@ -41,8 +41,8 @@ module "kms_table_key" {
 }
 
 module "dynamodb_table" {
-  source  = "terraform-aws-modules/dynamodb-table/aws"
-  version = "4.0.1"
+  # Release URL: https://github.com/terraform-aws-modules/terraform-aws-dynamodb-table/releases/tag/v4.0.1
+  source = "git::https://github.com/terraform-aws-modules/terraform-aws-dynamodb-table.git?ref=696ceabbfdd49f8246e3d401c035729d60ea6fab"
 
   name = var.table_name
 

@@ -38,8 +38,8 @@ locals {
 }
 
 module "ecr" {
-  source  = "terraform-aws-modules/ecr/aws"
-  version = "1.6.0"
+  # Release URL: https://github.com/terraform-aws-modules/terraform-aws-ecr/releases/tag/v1.6.0
+  source = "git::https://github.com/terraform-aws-modules/terraform-aws-ecr.git?ref=9f4b587846551110b0db199ea5599f016570fefe"
 
   for_each = local.ecr_registers_by_name
 
@@ -78,8 +78,8 @@ module "ecr" {
 }
 
 module "ecs_cluster" {
-  source  = "terraform-aws-modules/ecs/aws"
-  version = "5.9.1"
+  # Release URL: https://github.com/terraform-aws-modules/terraform-aws-ecs/releases/tag/v5.9.1
+  source = "git::https://github.com/terraform-aws-modules/terraform-aws-ecs.git?ref=45f532c06488d84f140af36241d164facb5e05f5"
 
   cluster_name = local.effective_ecs_cluster_name
 
@@ -101,8 +101,8 @@ module "ecs_cluster" {
 }
 
 module "elb" {
-  source  = "terraform-aws-modules/alb/aws"
-  version = "9.8.0"
+  # Release URL: https://github.com/terraform-aws-modules/terraform-aws-alb/releases/tag/v9.8.0
+  source = "git::https://github.com/terraform-aws-modules/terraform-aws-alb.git?ref=eb15097ece19399858ae84518bb900bd34494a74"
 
   name               = local.effective_nlb_name
   load_balancer_type = "network"
@@ -219,8 +219,8 @@ resource "aws_iam_policy" "ecs_core_task" {
 }
 
 module "ecs_core_service" {
-  source  = "terraform-aws-modules/ecs/aws//modules/service"
-  version = "5.9.1"
+  # Release URL: https://github.com/terraform-aws-modules/terraform-aws-ecs/releases/tag/v5.9.1
+  source = "git::https://github.com/terraform-aws-modules/terraform-aws-ecs.git//modules/service?ref=45f532c06488d84f140af36241d164facb5e05f5"
 
   name = local.idvh_config.service_core.service_name
 
@@ -381,9 +381,9 @@ resource "aws_iam_policy" "ecs_internal_idp_task" {
 }
 
 module "ecs_internal_idp_service" {
-  count   = local.effective_internal_idp_enabled ? 1 : 0
-  source  = "terraform-aws-modules/ecs/aws//modules/service"
-  version = "5.9.1"
+  count = local.effective_internal_idp_enabled ? 1 : 0
+  # Release URL: https://github.com/terraform-aws-modules/terraform-aws-ecs/releases/tag/v5.9.1
+  source = "git::https://github.com/terraform-aws-modules/terraform-aws-ecs.git//modules/service?ref=45f532c06488d84f140af36241d164facb5e05f5"
 
   name = local.idvh_config.service_internal_idp.service_name
 
