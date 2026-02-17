@@ -1,0 +1,11 @@
+standard:
+  internal: true
+  cross_zone_enabled: true
+  dns_record_client_routing_policy: availability_zone_affinity
+  target_health_path: /q/health/live
+  deregistration_delay: 10
+  enable_deletion_protection: false
+  target_group_name_prefix: t1-
+  core_container_port: 8080
+  internal_idp_enabled: true
+  internal_idp_container_port: 8082
