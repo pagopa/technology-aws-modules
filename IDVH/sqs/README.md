@@ -14,16 +14,16 @@ IDVH rule: queue behavior (retention, delays, encryption defaults, DLQ policy) i
 
 ```hcl
 module "sqs" {
-  source = "./IDVH/sqs"
+  source = "git::https://github.com/your-org/your-terraform-modules.git//IDVH/sqs?ref=main"
 
-  product_name       = "onemail"
+  product_name       = "example"
   env                = "dev"
   idvh_resource_tier = "standard"
 
-  name = "onemail-dev-events"
+  name = "example-dev-events"
 
   tags = {
-    Project = "onemail"
+    Project = "example"
   }
 }
 ```

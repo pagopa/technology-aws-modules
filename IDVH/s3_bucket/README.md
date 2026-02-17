@@ -1,11 +1,11 @@
 # IDVH s3_bucket
 
-Wrapper module per S3 che carica configurazioni dinamiche da catalogo YAML usando:
+Wrapper module for S3 that loads baseline settings from IDVH YAML catalog using:
 - `product_name`
 - `env`
 - `idvh_resource_tier`
 
-Il modulo applica default di sicurezza dal catalogo e lascia variabili solo per parametri dinamici.
+The module applies security defaults from the selected tier and keeps only dynamic deployment inputs as variables.
 
 ## IDVH resources available
 [Here's](./LIBRARY.md) the list of `idvh_resource_tier` available for this module.
@@ -14,16 +14,16 @@ Il modulo applica default di sicurezza dal catalogo e lascia variabili solo per 
 
 ```hcl
 module "artifact_bucket" {
-  source = "./IDVH/s3_bucket"
+  source = "git::https://github.com/your-org/your-terraform-modules.git//IDVH/s3_bucket?ref=main"
 
-  product_name      = "onemail"
-  env               = "dev"
+  product_name       = "example"
+  env                = "dev"
   idvh_resource_tier = "standard"
 
   name = "artifacts"
 
   tags = {
-    Project = "onemail"
+    Project = "example"
   }
 }
 ```
