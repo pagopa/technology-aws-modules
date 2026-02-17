@@ -1,5 +1,5 @@
 ---
-applyTo: "IDVH/**/*.tf,IDVH/**/*.yml,IDVH/**/*.md"
+applyTo: "IDVH/**/*.tf,IDVH/**/*.yml,IDVH/**/*.md,IDVH/**/*.sh,IDVH/**/*.py"
 ---
 
 # IDVH Instructions
@@ -21,6 +21,18 @@ applyTo: "IDVH/**/*.tf,IDVH/**/*.yml,IDVH/**/*.md"
 - Use direct `var override` or `YAML value` patterns for effective settings.
 - Avoid hardcoded environment/account specific values.
 - Preserve output contract stability for downstream modules.
+- For upstream module dependencies, use only `git::https://github.com/terraform-aws-modules/terraform-aws-<module>.git?ref=<commit-hash>`.
+- Do not use Terraform Registry shorthand sources such as `terraform-aws-modules/<name>/aws`.
+- Add a comment directly above each pinned `source` with the numeric release URL: `https://github.com/terraform-aws-modules/<repo>/releases/tag/vX.Y.Z`.
+
+## Documentation and examples
+- In module `README.md` examples, show external module usage (Git source) and do not use local paths such as `source = "./IDVH/<module>"`.
+- Keep examples and placeholders generic; do not include product-specific names from existing projects (for example `onemail`).
+
+## IDVH scripts
+- Keep full IDVH script implementations in `IDVH/.scripts`.
+- Reference shared script entrypoints from modules/tests via symlinks instead of duplicate wrappers or aliases.
+- At the top of each shell script, keep a short purpose comment and one concise usage example with placeholders.
 
 ## Security and governance
 - Keep least-privilege IAM actions and scoped resources where possible.

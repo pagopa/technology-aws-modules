@@ -4,7 +4,9 @@
 - Treat IDVH as a catalog-driven wrapper layer.
 - Keep baseline and structural parameters in YAML tiers.
 - Keep Terraform variables only for per-deployment dynamic inputs.
-- Keep raw upstream modules pinned by commit hash or fixed version constraints.
+- Keep raw upstream modules pinned by commit hash.
+- For upstream Terraform modules, use GitHub sources under `https://github.com/terraform-aws-modules`.
+- Add a release URL comment above each pinned module source, pointing to a numeric tag (`.../releases/tag/vX.Y.Z`).
 
 ## Loader baseline (`IDVH/01_idvh_loader`)
 - Load catalog files from:
@@ -44,6 +46,13 @@
 - Keep module `README.md` in sync with available tiers and example usage.
 - Keep `LIBRARY.md` aligned with the catalog.
 - Keep `resource_description.info` placeholders aligned with flattened YAML key names.
+- Keep README module usage examples external (Git source), not local relative paths like `./IDVH/<module>`.
+- Keep examples and defaults generic; avoid project-specific names in reusable module docs.
+
+## Script baseline
+- Keep full IDVH scripts under `IDVH/.scripts`.
+- Use symlinks from module/test folders to shared scripts in `IDVH/.scripts` when needed.
+- Keep shell script headers short: one-line purpose and one concise usage example with placeholders.
 
 ## Optional module references
 - Load only the reference file that matches the target resource module when such files exist.

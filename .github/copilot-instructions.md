@@ -48,3 +48,9 @@ You are an expert software/platform engineer. Optimize for secure, consistent, a
 - Bash: `bash -n` and `shellcheck -s bash` (if available).
 - Python/Java/Node.js: run unit tests relevant to the change.
 - Run `.github/scripts/validate-copilot-customizations.sh` for customization changes.
+
+## IDVH addendum
+- For `IDVH/**`, enforce `.github/instructions/idvh.instructions.md` and the `idvh-terraform` skill standards.
+- Use upstream Terraform modules from `github.com/terraform-aws-modules` with Git `source` pinned by commit hash.
+- Add a numeric release URL comment above each pinned upstream module source (`.../releases/tag/vX.Y.Z`).
+- Keep IDVH README examples external and generic (no local `./IDVH/...` sources and no project-specific names).
