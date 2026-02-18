@@ -1,6 +1,6 @@
 mock_provider "aws" {}
 
-run "plan_with_single_table" {
+run "plan_with_minimal_table" {
   command = plan
 
   module {
@@ -14,40 +14,16 @@ run "plan_with_single_table" {
 
     table_name = "Sessions"
     hash_key   = "samlRequestID"
-    range_key  = "recordType"
 
     attributes = [
       {
         name = "samlRequestID"
         type = "S"
-      },
-      {
-        name = "recordType"
-        type = "S"
-      },
-      {
-        name = "code"
-        type = "S"
       }
     ]
 
-    global_secondary_indexes = [
-      {
-        name            = "gsi_code_idx"
-        hash_key        = "code"
-        projection_type = "ALL"
-      }
-    ]
-
-    ttl_enabled                    = true
-    ttl_attribute_name             = "ttl"
-    point_in_time_recovery_enabled = true
-    stream_enabled                 = true
-    stream_view_type               = "NEW_AND_OLD_IMAGES"
-    deletion_protection_enabled    = false
-    server_side_encryption_enabled = true
-    create_kms_key                 = true
-    kms_alias                      = "/dynamodb/sessions"
+    create_kms_key = true
+    kms_alias      = "/dynamodb/sessions"
   }
 
   assert {
@@ -56,17 +32,82 @@ run "plan_with_single_table" {
   }
 
   assert {
-    condition     = output.table_global_secondary_index_arns["gsi_code_idx"] == "${output.table_arn}/index/gsi_code_idx"
-    error_message = "Expected GSI ARN output to be composed from table ARN and index name."
-  }
-
-  assert {
     condition     = output.kms_key_arn != null
     error_message = "Expected kms_key_arn output to be set when create_kms_key is true."
   }
+
+  assert {
+    condition     = output.idvh_tier_config != null
+    error_message = "Expected idvh_tier_config output to contain tier configuration."
+  }
 }
 
-run "fails_when_stream_enabled_without_stream_view_type" {
+run "plan_with_existing_kms_key" {
+  command = plan
+
+  module {
+    source = "./"
+  }
+
+  variables {
+    product_name       = "onemail"
+    env                = "dev"
+    idvh_resource_tier = "standard"
+
+    table_name = "Sessions"
+    hash_key   = "userId"
+
+    attributes = [
+      {
+        name = "userId"
+        type = "S"
+      }
+    ]
+
+    create_kms_key                      = false
+    server_side_encryption_kms_key_arn = "arn:aws:kms:eu-south-1:123456789012:key/12345678-1234-1234-1234-123456789012"
+  }
+
+  assert {
+    condition     = output.kms_key_arn == "arn:aws:kms:eu-south-1:123456789012:key/12345678-1234-1234-1234-123456789012"
+    error_message = "Expected kms_key_arn output to match the provided ARN."
+  }
+
+  assert {
+    condition     = output.kms_key_id == null
+    error_message = "Expected kms_key_id output to be null when create_kms_key is false."
+  }
+}
+
+run "fails_when_hash_key_not_in_attributes" {
+  command = plan
+
+  module {
+    source = "./"
+  }
+
+  variables {
+    product_name       = "onemail"
+    env                = "dev"
+    idvh_resource_tier = "standard"
+
+    table_name = "Sessions"
+    hash_key   = "missingKey"
+
+    attributes = [
+      {
+        name = "userId"
+        type = "S"
+      }
+    ]
+  }
+
+  expect_failures = [
+    check.dynamodb_table_inputs,
+  ]
+}
+
+run "fails_when_create_kms_key_without_alias" {
   command = plan
 
   module {
@@ -80,24 +121,19 @@ run "fails_when_stream_enabled_without_stream_view_type" {
 
     table_name = "Sessions"
     hash_key   = "samlRequestID"
-    range_key  = "recordType"
 
     attributes = [
       {
         name = "samlRequestID"
         type = "S"
-      },
-      {
-        name = "recordType"
-        type = "S"
       }
     ]
 
-    stream_enabled   = true
-    stream_view_type = null
+    create_kms_key = true
+    kms_alias      = null
   }
 
   expect_failures = [
-    check.dynamodb_module_values,
+    check.dynamodb_kms_inputs,
   ]
 }
