@@ -1,3 +1,4 @@
 standard:
   kms_ssm_enable_rotation: true
   kms_rotation_period_in_days: 365
+  enable_point_in_time_recovery: true
