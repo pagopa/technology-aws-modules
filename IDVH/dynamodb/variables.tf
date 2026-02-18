@@ -18,22 +18,23 @@ variable "idvh_resource_tier" {
   description = "(Required) The IDVH resource tier key to be created"
 }
 
-variable "table_name" {
-  type        = string
-  description = "(Required) DynamoDB table name"
-}
-
-variable "hash_key" {
-  type        = string
-  description = "(Required) Partition key attribute name"
-}
-
-variable "attributes" {
-  type = list(object({
-    name = string
-    type = string
-  }))
-  description = "(Required) DynamoDB attribute definitions used by primary and index keys"
+variable "table_config" {
+  type = object({
+    table_name                  = string
+    hash_key                    = string
+    range_key                   = optional(string)
+    attributes                  = list(object({ name = string, type = string }))
+    billing_mode                = optional(string, "PAY_PER_REQUEST")
+    stream_enabled              = optional(bool, false)
+    stream_view_type            = optional(string)
+    ttl_enabled                 = optional(bool, false)
+    ttl_attribute_name          = optional(string, "")
+    deletion_protection_enabled = optional(bool, false)
+    global_secondary_indexes    = optional(any, [])
+    local_secondary_indexes     = optional(any, [])
+    replica_regions             = optional(list(any), [])
+  })
+  description = "(Required) DynamoDB table configuration passed to upstream module"
 }
 
 variable "create_kms_key" {

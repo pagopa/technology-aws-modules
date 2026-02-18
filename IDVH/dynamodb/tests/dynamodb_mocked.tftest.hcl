@@ -8,19 +8,17 @@ run "plan_with_minimal_table" {
   }
 
   variables {
-    product_name       = "onemail"
+    product_name       = "myproduct"
     env                = "dev"
     idvh_resource_tier = "standard"
 
-    table_name = "Sessions"
-    hash_key   = "samlRequestID"
-
-    attributes = [
-      {
-        name = "samlRequestID"
-        type = "S"
-      }
-    ]
+    table_config = {
+      table_name = "Sessions"
+      hash_key   = "sessionId"
+      attributes = [
+        { name = "sessionId", type = "S" }
+      ]
+    }
 
     create_kms_key = true
     kms_alias      = "/dynamodb/sessions"
@@ -50,21 +48,19 @@ run "plan_with_existing_kms_key" {
   }
 
   variables {
-    product_name       = "onemail"
+    product_name       = "myproduct"
     env                = "dev"
     idvh_resource_tier = "standard"
 
-    table_name = "Sessions"
-    hash_key   = "userId"
+    table_config = {
+      table_name = "Sessions"
+      hash_key   = "userId"
+      attributes = [
+        { name = "userId", type = "S" }
+      ]
+    }
 
-    attributes = [
-      {
-        name = "userId"
-        type = "S"
-      }
-    ]
-
-    create_kms_key                      = false
+    create_kms_key                     = false
     server_side_encryption_kms_key_arn = "arn:aws:kms:eu-south-1:123456789012:key/12345678-1234-1234-1234-123456789012"
   }
 
@@ -87,19 +83,17 @@ run "fails_when_hash_key_not_in_attributes" {
   }
 
   variables {
-    product_name       = "onemail"
+    product_name       = "myproduct"
     env                = "dev"
     idvh_resource_tier = "standard"
 
-    table_name = "Sessions"
-    hash_key   = "missingKey"
-
-    attributes = [
-      {
-        name = "userId"
-        type = "S"
-      }
-    ]
+    table_config = {
+      table_name = "Sessions"
+      hash_key   = "missingKey"
+      attributes = [
+        { name = "userId", type = "S" }
+      ]
+    }
   }
 
   expect_failures = [
@@ -115,19 +109,17 @@ run "fails_when_create_kms_key_without_alias" {
   }
 
   variables {
-    product_name       = "onemail"
+    product_name       = "myproduct"
     env                = "dev"
     idvh_resource_tier = "standard"
 
-    table_name = "Sessions"
-    hash_key   = "samlRequestID"
-
-    attributes = [
-      {
-        name = "samlRequestID"
-        type = "S"
-      }
-    ]
+    table_config = {
+      table_name = "Sessions"
+      hash_key   = "sessionId"
+      attributes = [
+        { name = "sessionId", type = "S" }
+      ]
+    }
 
     create_kms_key = true
     kms_alias      = null

@@ -33,7 +33,7 @@ module "kms_table_key" {
   tags = merge(
     var.tags,
     {
-      Name = "kms-${var.table_name}"
+      Name = "kms-${var.table_config.table_name}"
     }
   )
 }
@@ -42,9 +42,26 @@ module "dynamodb_table" {
   # Release URL: https://github.com/terraform-aws-modules/terraform-aws-dynamodb-table/releases/tag/v4.0.1
   source = "git::https://github.com/terraform-aws-modules/terraform-aws-dynamodb-table.git?ref=696ceabbfdd49f8246e3d401c035729d60ea6fab"
 
-  name = var.table_name
+  name = var.table_config.table_name
 
-  hash_key = var.hash_key
+  hash_key   = var.table_config.hash_key
+  range_key  = var.table_config.range_key
+  attributes = var.table_config.attributes
+
+  billing_mode = var.table_config.billing_mode
+
+  stream_enabled   = var.table_config.stream_enabled
+  stream_view_type = var.table_config.stream_view_type
+
+  ttl_enabled        = var.table_config.ttl_enabled
+  ttl_attribute_name = var.table_config.ttl_attribute_name
+
+  deletion_protection_enabled = var.table_config.deletion_protection_enabled
+
+  replica_regions = var.table_config.replica_regions
+
+  global_secondary_indexes = var.table_config.global_secondary_indexes
+  local_secondary_indexes  = var.table_config.local_secondary_indexes
 
   server_side_encryption_enabled     = true
   server_side_encryption_kms_key_arn = local.effective_server_side_encryption_kms_key_arn
@@ -53,7 +70,7 @@ module "dynamodb_table" {
   tags = merge(
     var.tags,
     {
-      Name = var.table_name
+      Name = var.table_config.table_name
     }
   )
 }
