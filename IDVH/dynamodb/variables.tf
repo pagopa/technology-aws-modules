@@ -72,6 +72,18 @@ variable "server_side_encryption_kms_key_arn" {
   default     = null
 }
 
+variable "enable_point_in_time_recovery" {
+  type        = bool
+  description = "(Optional) Enable point-in-time recovery. If null and idvh_resource_tier is set, the IDVH tier value is used."
+  default     = null
+}
+
+variable "policy" {
+  type        = string
+  description = "(Optional) JSON policy for the KMS key when create_kms_key is true"
+  default     = "{\"Version\":\"2012-10-17\",\"Statement\":[]}"
+}
+
 variable "tags" {
   type        = map(string)
   description = "(Optional) Tags to apply to resources"

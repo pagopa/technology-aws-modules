@@ -79,6 +79,47 @@ module "dynamodb" {
 }
 ```
 
+## Example - Custom KMS policy
+
+To apply a custom KMS key policy when `create_kms_key = true`:
+
+```hcl
+module "dynamodb" {
+  source = "git::https://github.com/your-org/your-terraform-modules.git//IDVH/dynamodb?ref=main"
+
+  product_name       = "onemail"
+  env                = "dev"
+  idvh_resource_tier = "standard"
+
+  table_name = "Sessions"
+  hash_key   = "samlRequestID"
+
+  attributes = [
+    {
+      name = "samlRequestID"
+      type = "S"
+    }
+  ]
+
+  create_kms_key = true
+  kms_alias      = "/dynamodb/sessions"
+  
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid    = "Enable DynamoDB Access"
+        Effect = "Allow"
+        Principal = {
+          Service = "dynamodb.amazonaws.com"
+        }
+        Action   = "kms:*"
+        Resource = "*"
+      }
+    ]
+  })
+}
+
 ## Example - Advanced use case (use AWS module directly)
 
 For tables requiring advanced features, skip this wrapper and use the AWS module:

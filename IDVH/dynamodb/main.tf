@@ -12,6 +12,8 @@ locals {
 
   effective_kms_rotation_period_in_days = var.kms_rotation_period_in_days != null ? var.kms_rotation_period_in_days : local.idvh_config.kms_rotation_period_in_days
 
+  effective_point_in_time_recovery = var.enable_point_in_time_recovery != null ? var.enable_point_in_time_recovery : try(local.idvh_config.enable_point_in_time_recovery, false)
+
   effective_server_side_encryption_kms_key_arn = var.create_kms_key ? module.kms_table_key[0].aliases[var.kms_alias].target_key_arn : var.server_side_encryption_kms_key_arn
 }
 
@@ -24,6 +26,7 @@ module "kms_table_key" {
   key_usage               = "ENCRYPT_DECRYPT"
   enable_key_rotation     = local.effective_kms_enable_key_rotation
   rotation_period_in_days = local.effective_kms_rotation_period_in_days
+  policy                  = var.policy
 
   aliases = [var.kms_alias]
 
@@ -42,9 +45,10 @@ module "dynamodb_table" {
   name = var.table_name
 
   hash_key = var.hash_key
-  
+
   server_side_encryption_enabled     = true
   server_side_encryption_kms_key_arn = local.effective_server_side_encryption_kms_key_arn
+  point_in_time_recovery_enabled     = local.effective_point_in_time_recovery
 
   tags = merge(
     var.tags,
