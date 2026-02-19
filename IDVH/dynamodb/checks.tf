@@ -11,6 +11,14 @@ locals {
   valid_attribute_types = toset(["S", "N", "B"])
 
   attribute_names = [for attribute in var.table_config.attributes : attribute.name]
+
+  replica_regions      = local.effective_replica_regions
+  replica_kms_required = var.enable_replication && length(local.replica_regions) > 0 && local.effective_server_side_encryption_kms_key_arn != null
+  replica_kms_missing = [
+    for replica in local.replica_regions :
+    replica.region_name
+    if local.replica_kms_required && (replica.kms_key_arn == null || length(trimspace(replica.kms_key_arn)) == 0)
+  ]
 }
 
 check "dynamodb_yaml_required_keys" {

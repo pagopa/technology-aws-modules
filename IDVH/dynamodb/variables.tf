@@ -43,6 +43,12 @@ variable "create_kms_key" {
   default     = false
 }
 
+variable "enable_replication" {
+  type        = bool
+  description = "(Optional) Enable DynamoDB global table replication and KMS multi-region settings"
+  default     = false
+}
+
 variable "kms_alias" {
   type        = string
   description = "(Optional) KMS alias used when create_kms_key is true"

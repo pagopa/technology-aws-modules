@@ -22,6 +22,7 @@ run "plan_with_minimal_table" {
 
     create_kms_key = true
     kms_alias      = "/dynamodb/sessions"
+    enable_replication = false
   }
 
   assert {
@@ -62,6 +63,7 @@ run "plan_with_existing_kms_key" {
 
     create_kms_key                     = false
     server_side_encryption_kms_key_arn = "arn:aws:kms:eu-south-1:123456789012:key/12345678-1234-1234-1234-123456789012"
+    enable_replication                 = false
   }
 
   assert {
@@ -123,9 +125,49 @@ run "fails_when_create_kms_key_without_alias" {
 
     create_kms_key = true
     kms_alias      = null
+    enable_replication = false
   }
 
   expect_failures = [
     check.dynamodb_kms_inputs,
   ]
 }
+<<<<<<< Updated upstream
+=======
+
+run "plan_with_replica_without_explicit_kms_key" {
+  command = plan
+
+  module {
+    source = "./"
+  }
+
+  variables {
+    product_name       = "myproduct"
+    env                = "dev"
+    idvh_resource_tier = "standard"
+
+    table_config = {
+      table_name = "EmailStatusHistory"
+      hash_key   = "statusId"
+      attributes = [
+        { name = "statusId", type = "S" }
+      ]
+      replica_regions = [
+        {
+          region_name = "eu-central-1"
+        }
+      ]
+    }
+
+    create_kms_key = true
+    kms_alias      = "/dynamodb/email-status-history"
+    enable_replication = true
+  }
+
+  assert {
+    condition     = output.kms_key_arn != null
+    error_message = "Expected kms_key_arn output to be set when create_kms_key is true."
+  }
+}
+>>>>>>> Stashed changes

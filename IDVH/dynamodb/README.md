@@ -8,6 +8,8 @@ This module:
 - Optionally creates a KMS key for table encryption with tier-based rotation settings
 - Always enables server-side encryption
 - Supports range keys, GSI/LSI, TTL, streams, deletion protection, and global tables
+- Automatically uses the module KMS key ARN for replicas when `kms_key_arn` is not explicitly set
+- Keeps replication disabled by default and enables DynamoDB/KMS replication only when `enable_replication = true`
 
 IDVH rule: `dynamodb.yml` keeps only KMS defaults (`kms_ssm_enable_rotation`, `kms_rotation_period_in_days`).
 
@@ -34,6 +36,7 @@ module "dynamodb" {
 
   create_kms_key = true
   kms_alias      = "/dynamodb/sessions"
+  enable_replication = false
 
   tags = {
     Project = "MyProject"
@@ -86,6 +89,37 @@ module "dynamodb" {
 }
 ```
 
+## Example - Global table with replicas
+
+When `replica_regions` is set and a customer-managed KMS key is used, the module uses the created table KMS key ARN by default for each replica. You can still override `kms_key_arn` per replica region when needed.
+
+```hcl
+module "dynamodb" {
+  source = "git::https://github.com/pagopa/technology-aws-modules.git//IDVH/dynamodb?ref=main"
+
+  product_name       = "myproduct"
+  env                = "dev"
+  idvh_resource_tier = "standard"
+
+  table_config = {
+    table_name = "EmailStatusHistory"
+    hash_key   = "statusId"
+    attributes = [
+      { name = "statusId", type = "S" }
+    ]
+    replica_regions = [
+      {
+        region_name = "eu-central-1"
+        kms_key_arn = "arn:aws:kms:eu-central-1:123456789012:key/replica-key-id"
+      }
+    ]
+  }
+
+  create_kms_key = true
+  kms_alias      = "/dynamodb/email-status-history"
+}
+```
+
 ## Example - Pass-through from variable
 
 ```hcl
@@ -119,6 +153,7 @@ module "dynamodb" {
 
   create_kms_key = true
   kms_alias      = "/dynamodb/${var.dynamodb_table_config.table_name}"
+  enable_replication = false
 
   tags = var.tags
 }
@@ -144,5 +179,6 @@ module "dynamodb" {
 
   create_kms_key                     = false
   server_side_encryption_kms_key_arn = "arn:aws:kms:eu-south-1:123456789012:key/existing-key-id"
+  enable_replication                 = false
 }
 ```
