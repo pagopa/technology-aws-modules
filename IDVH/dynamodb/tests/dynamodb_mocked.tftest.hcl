@@ -129,3 +129,38 @@ run "fails_when_create_kms_key_without_alias" {
     check.dynamodb_kms_inputs,
   ]
 }
+
+run "plan_with_replica_without_explicit_kms_key" {
+  command = plan
+
+  module {
+    source = "./"
+  }
+
+  variables {
+    product_name       = "myproduct"
+    env                = "dev"
+    idvh_resource_tier = "standard"
+
+    table_config = {
+      table_name = "EmailStatusHistory"
+      hash_key   = "statusId"
+      attributes = [
+        { name = "statusId", type = "S" }
+      ]
+      replica_regions = [
+        {
+          region_name = "eu-central-1"
+        }
+      ]
+    }
+
+    create_kms_key = true
+    kms_alias      = "/dynamodb/email-status-history"
+  }
+
+  assert {
+    condition     = output.kms_key_arn != null
+    error_message = "Expected kms_key_arn output to be set when create_kms_key is true."
+  }
+}
