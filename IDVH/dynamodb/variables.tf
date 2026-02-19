@@ -79,11 +79,11 @@ variable "enable_point_in_time_recovery" {
   default     = null
 }
 
-variable "policy" {
-  type        = string
-  description = "(Optional) JSON policy for the KMS key when create_kms_key is true"
-  default     = "{\"Version\":\"2012-10-17\",\"Statement\":[]}"
-}
+# variable "policy" {
+#   type        = string
+#   description = "(Optional) JSON policy for the KMS key when create_kms_key is true"
+#   default     = null
+# }
 
 variable "tags" {
   type        = map(string)
