@@ -26,8 +26,8 @@ module "kms_table_key" {
   key_usage               = "ENCRYPT_DECRYPT"
   enable_key_rotation     = local.effective_kms_enable_key_rotation
   rotation_period_in_days = local.effective_kms_rotation_period_in_days
-  policy                  = var.policy
-
+  #policy                  = var.policy
+  enable_default_policy   = true
   aliases = [var.kms_alias]
 
   tags = merge(
