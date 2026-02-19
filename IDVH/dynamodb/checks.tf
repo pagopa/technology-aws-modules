@@ -11,6 +11,14 @@ locals {
   valid_attribute_types = toset(["S", "N", "B"])
 
   attribute_names = [for attribute in var.table_config.attributes : attribute.name]
+
+  replica_regions     = local.effective_replica_regions
+  replica_kms_required = length(local.replica_regions) > 0 && local.effective_server_side_encryption_kms_key_arn != null
+  replica_kms_missing = [
+    for replica in local.replica_regions :
+    replica.region_name
+    if local.replica_kms_required && (replica.kms_key_arn == null || length(trimspace(replica.kms_key_arn)) == 0)
+  ]
 }
 
 check "dynamodb_yaml_required_keys" {
@@ -79,5 +87,12 @@ check "dynamodb_table_inputs" {
     )
 
     error_message = "Invalid DynamoDB table configuration. Check table_config.table_name, table_config.hash_key, and table_config.attributes."
+  }
+}
+
+check "dynamodb_replica_kms_inputs" {
+  assert {
+    condition     = length(local.replica_kms_missing) == 0
+    error_message = "Invalid replica configuration. kms_key_arn must be set for each replica when using a customer-managed KMS key. Missing for regions: [${join(", ", local.replica_kms_missing)}]"
   }
 }

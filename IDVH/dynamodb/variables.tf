@@ -32,7 +32,10 @@ variable "table_config" {
     deletion_protection_enabled = optional(bool, false)
     global_secondary_indexes    = optional(any, [])
     local_secondary_indexes     = optional(any, [])
-    replica_regions             = optional(list(any), [])
+    replica_regions = optional(list(object({
+      region_name = string
+      kms_key_arn = optional(string)
+    })), [])
   })
   description = "(Required) DynamoDB table configuration passed to upstream module"
 }

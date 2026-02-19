@@ -15,6 +15,19 @@ locals {
   effective_point_in_time_recovery = var.enable_point_in_time_recovery != null ? var.enable_point_in_time_recovery : try(local.idvh_config.enable_point_in_time_recovery, false)
 
   effective_server_side_encryption_kms_key_arn = var.create_kms_key ? module.kms_table_key[0].aliases[var.kms_alias].target_key_arn : var.server_side_encryption_kms_key_arn
+
+  effective_replica_regions = [
+    for replica in var.table_config.replica_regions : merge(
+      replica,
+      {
+        kms_key_arn = (
+          try(replica.kms_key_arn, null) != null && length(trimspace(replica.kms_key_arn)) > 0
+          ? replica.kms_key_arn
+          : local.effective_server_side_encryption_kms_key_arn
+        )
+      }
+    )
+  ]
 }
 
 module "kms_table_key" {
@@ -58,7 +71,7 @@ module "dynamodb_table" {
 
   deletion_protection_enabled = var.table_config.deletion_protection_enabled
 
-  replica_regions = var.table_config.replica_regions
+  replica_regions = local.effective_replica_regions
 
   global_secondary_indexes = var.table_config.global_secondary_indexes
   local_secondary_indexes  = var.table_config.local_secondary_indexes
