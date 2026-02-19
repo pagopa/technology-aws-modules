@@ -22,6 +22,7 @@ run "plan_with_minimal_table" {
 
     create_kms_key = true
     kms_alias      = "/dynamodb/sessions"
+    enable_replication = false
   }
 
   assert {
@@ -62,6 +63,7 @@ run "plan_with_existing_kms_key" {
 
     create_kms_key                     = false
     server_side_encryption_kms_key_arn = "arn:aws:kms:eu-south-1:123456789012:key/12345678-1234-1234-1234-123456789012"
+    enable_replication                 = false
   }
 
   assert {
@@ -123,6 +125,7 @@ run "fails_when_create_kms_key_without_alias" {
 
     create_kms_key = true
     kms_alias      = null
+    enable_replication = false
   }
 
   expect_failures = [
@@ -157,6 +160,7 @@ run "plan_with_replica_without_explicit_kms_key" {
 
     create_kms_key = true
     kms_alias      = "/dynamodb/email-status-history"
+    enable_replication = true
   }
 
   assert {

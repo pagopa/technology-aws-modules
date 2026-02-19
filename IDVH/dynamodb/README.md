@@ -9,6 +9,7 @@ This module:
 - Always enables server-side encryption
 - Supports range keys, GSI/LSI, TTL, streams, deletion protection, and global tables
 - Automatically uses the module KMS key ARN for replicas when `kms_key_arn` is not explicitly set
+- Keeps replication disabled by default and enables DynamoDB/KMS replication only when `enable_replication = true`
 
 IDVH rule: `dynamodb.yml` keeps only KMS defaults (`kms_ssm_enable_rotation`, `kms_rotation_period_in_days`).
 
@@ -35,6 +36,7 @@ module "dynamodb" {
 
   create_kms_key = true
   kms_alias      = "/dynamodb/sessions"
+  enable_replication = false
 
   tags = {
     Project = "MyProject"
@@ -154,6 +156,7 @@ module "dynamodb" {
 
   create_kms_key = true
   kms_alias      = "/dynamodb/${var.dynamodb_table_config.table_name}"
+  enable_replication = false
 
   tags = var.tags
 }
@@ -179,5 +182,6 @@ module "dynamodb" {
 
   create_kms_key                     = false
   server_side_encryption_kms_key_arn = "arn:aws:kms:eu-south-1:123456789012:key/existing-key-id"
+  enable_replication                 = false
 }
 ```
