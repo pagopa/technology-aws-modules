@@ -132,8 +132,6 @@ run "fails_when_create_kms_key_without_alias" {
     check.dynamodb_kms_inputs,
   ]
 }
-<<<<<<< Updated upstream
-=======
 
 run "plan_with_replica_without_explicit_kms_key" {
   command = plan
@@ -170,4 +168,3 @@ run "plan_with_replica_without_explicit_kms_key" {
     error_message = "Expected kms_key_arn output to be set when create_kms_key is true."
   }
 }
->>>>>>> Stashed changes
