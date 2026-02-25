@@ -244,7 +244,7 @@ resource "aws_apigatewayv2_api_mapping" "main" {
 }
 
 resource "aws_api_gateway_authorizer" "main" {
-  count = local.effective_api_authorizer_name != "" ? 1 : 0
+  count = local.effective_api_authorizer_name != null ? 1 : 0
 
   name          = local.effective_api_authorizer_name
   rest_api_id   = aws_api_gateway_rest_api.main.id
