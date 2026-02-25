@@ -40,6 +40,12 @@ variable "endpoint_vpc_endpoint_ids" {
   default     = null
 }
 
+variable "endpoint_api_types" {
+  type        = list(string)
+  description = "(Optional) Dynamic API types override for endpoint configuration"
+  default     = null
+}
+
 variable "plan_api_key_name" {
   type        = string
   description = "(Optional) Dynamic usage-plan API key name override"
