@@ -38,7 +38,7 @@ resource "aws_api_gateway_rest_api" "main" {
     types            = local.effective_api_types
     vpc_endpoint_ids = local.effective_endpoint_vpc_endpoint_ids
   }
-
+  policy = var.policy != null ? var.policy : null
   disable_execute_api_endpoint = local.effective_create_custom_domain_name ? true : false
 
   tags = merge(

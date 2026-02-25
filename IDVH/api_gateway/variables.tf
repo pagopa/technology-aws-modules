@@ -82,6 +82,11 @@ variable "api_authorizer_user_pool_arn" {
   default     = null
 }
 
+variable "policy" {
+  type = string
+  default = null
+}
+
 variable "tags" {
   type        = map(string)
   description = "(Optional) Tags to apply to resources"
