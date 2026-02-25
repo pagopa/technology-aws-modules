@@ -25,9 +25,9 @@ locals {
     local.idvh_config.custom_domain.create
   )
 
-  effective_api_authorizer_name = var.api_authorizer_name != null ? var.api_authorizer_name : coalesce(local.idvh_config.api_authorizer.name, "")
+  effective_api_authorizer_name = var.api_authorizer_name != null ? var.api_authorizer_name : local.idvh_config.api_authorizer.name
 
-  effective_api_authorizer_user_pool_arn = var.api_authorizer_user_pool_arn != null ? var.api_authorizer_user_pool_arn : coalesce(local.idvh_config.api_authorizer.user_pool_arn, "")
+  effective_api_authorizer_user_pool_arn = var.api_authorizer_user_pool_arn != null ? var.api_authorizer_user_pool_arn : local.idvh_config.api_authorizer.user_pool_arn
 }
 
 resource "aws_api_gateway_rest_api" "main" {
