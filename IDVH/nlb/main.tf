@@ -8,16 +8,7 @@ locals {
           target_group_key = "ecs_core"
         }
       }
-    },
-    var.internal_idp_enabled ? {
-      ecs_internal_idp = {
-        port     = var.internal_idp_container_port
-        protocol = "TCP"
-        forward = {
-          target_group_key = "ecs_internal_idp"
-        }
-      }
-    } : {}
+    }
   )
 
   target_groups = merge(
@@ -39,26 +30,7 @@ locals {
           timeout             = 6
         }
       }
-    },
-    var.internal_idp_enabled ? {
-      ecs_internal_idp = {
-        name_prefix          = var.target_group_name_prefix
-        protocol             = "TCP"
-        port                 = var.internal_idp_container_port
-        target_type          = "ip"
-        deregistration_delay = var.deregistration_delay
-        create_attachment    = false
-        health_check = {
-          enabled             = true
-          interval            = 30
-          path                = var.target_health_path
-          port                = var.internal_idp_container_port
-          healthy_threshold   = 3
-          unhealthy_threshold = 3
-          timeout             = 6
-        }
-      }
-    } : {}
+    }
   )
 }
 
