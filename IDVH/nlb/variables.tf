@@ -23,17 +23,6 @@ variable "core_container_port" {
   description = "(Required) Core service container port used by NLB listener and target group"
 }
 
-variable "internal_idp_enabled" {
-  type        = bool
-  description = "(Required) Enable internal IDP listener and target group"
-}
-
-variable "internal_idp_container_port" {
-  type        = number
-  description = "(Optional) Internal IDP container port used when internal_idp_enabled is true"
-  default     = null
-}
-
 variable "internal" {
   type        = bool
   description = "(Required) Whether the NLB is internal"
