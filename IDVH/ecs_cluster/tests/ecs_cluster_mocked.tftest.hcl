@@ -8,6 +8,10 @@ run "plan_with_fargate_capacity_provider" {
   }
 
   variables {
+    product_name       = "onemail"
+    env                = "dev"
+    idvh_resource_tier = "standard"
+
     cluster_name              = "onemail-dev-ecs-cluster"
     enable_container_insights = true
 

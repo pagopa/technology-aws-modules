@@ -1,4 +1,4 @@
-standard_core:
+standard:
   event_mode: false
   cpu: 1024
   memory: 2048
@@ -18,26 +18,4 @@ standard_core:
     desired_count: 2
     min_capacity: 2
     max_capacity: 4
-  environment_variables: []
-
-standard_internal_idp:
-  event_mode: false
-  cpu: 512
-  memory: 1024
-  enable_execute_command: true
-  cpu_high_scaling_adjustment: 1
-  container:
-    cpu: 256
-    container_port: 8082
-    host_port: 8082
-    logs_retention_days: 14
-  autoscaling:
-    enable: true
-    desired_count: 1
-    min_capacity: 1
-    max_capacity: 2
-  event_autoscaling:
-    desired_count: 1
-    min_capacity: 1
-    max_capacity: 2
   environment_variables: []
