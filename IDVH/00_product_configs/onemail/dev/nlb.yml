@@ -7,5 +7,3 @@ standard:
   enable_deletion_protection: false
   target_group_name_prefix: t1-
   core_container_port: 8080
-  internal_idp_enabled: false
-  internal_idp_container_port: 8082
