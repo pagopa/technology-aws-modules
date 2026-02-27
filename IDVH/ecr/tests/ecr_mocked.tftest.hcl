@@ -8,6 +8,10 @@ run "plan_with_derived_repository_names" {
   }
 
   variables {
+    product_name       = "onemail"
+    env                = "dev"
+    idvh_resource_tier = "standard"
+
     repository_name_prefix = "onemail-dev"
 
     repositories = {
@@ -41,6 +45,10 @@ run "plan_with_name_override" {
   }
 
   variables {
+    product_name       = "onemail"
+    env                = "dev"
+    idvh_resource_tier = "standard"
+
     repository_name_prefix = "onemail-dev"
 
     repositories = {

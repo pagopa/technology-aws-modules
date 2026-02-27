@@ -1,6 +1,19 @@
+module "idvh_loader" {
+  source = "../01_idvh_loader"
+
+  product_name       = var.product_name
+  env                = var.env
+  idvh_resource_tier = var.idvh_resource_tier
+  idvh_resource_type = "ecr"
+}
+
 locals {
+  idvh_config = module.idvh_loader.idvh_resource_configuration
+
+  effective_repositories = var.repositories != null ? var.repositories : local.idvh_config.repositories
+
   repositories_by_key = {
-    for repository_key, repository in var.repositories :
+    for repository_key, repository in local.effective_repositories :
     repository_key => merge(
       repository,
       {
