@@ -3,6 +3,4 @@ standard:
     core:
       number_of_images_to_keep: 100
       repository_image_tag_mutability: IMMUTABLE
-    internal_idp:
-      number_of_images_to_keep: 100
-      repository_image_tag_mutability: IMMUTABLE
+    
