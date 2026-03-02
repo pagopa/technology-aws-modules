@@ -10,6 +10,8 @@ module "idvh_loader" {
 data "aws_region" "current" {}
 
 locals {
+  idvh_config = module.idvh_loader.idvh_resource_configuration
+
   effective_event_mode = var.event_mode != null ? var.event_mode : local.idvh_config.event_mode
 
   effective_autoscaling = {
