@@ -156,21 +156,20 @@ module "ecs_service" {
     }
   }
 
-  security_group_rules = {
+  security_group_ingress_rules = {
     nlb_ingress = {
-      type                     = "ingress"
-      from_port                = local.idvh_config.container.container_port
-      to_port                  = local.idvh_config.container.container_port
-      protocol                 = "tcp"
-      description              = "Service port"
-      source_security_group_id = var.nlb_security_group_id
+      description                  = "Service port"
+      from_port                    = local.idvh_config.container.container_port
+      to_port                      = local.idvh_config.container.container_port
+      ip_protocol                  = "tcp"
+      referenced_security_group_id = var.nlb_security_group_id
     }
-    egress_all = {
-      type        = "egress"
-      from_port   = 0
-      to_port     = 0
-      protocol    = "-1"
-      cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  security_group_egress_rules = {
+    all = {
+      ip_protocol = "-1"
+      cidr_ipv4   = "0.0.0.0/0"
     }
   }
 
