@@ -43,9 +43,9 @@ resource "aws_iam_policy" "task" {
 }
 
 module "ecs_service" {
-  # Release URL: https://github.com/terraform-aws-modules/terraform-aws-ecs/releases/tag/v6.0.0
-  # Pinned commit: https://github.com/terraform-aws-modules/terraform-aws-ecs/commit/cfd967a4790b541b722ff94692588657b77d62ed
-  source = "git::https://github.com/terraform-aws-modules/terraform-aws-ecs.git//modules/service?ref=cfd967a4790b541b722ff94692588657b77d62ed"
+  # Release URL: https://github.com/terraform-aws-modules/terraform-aws-ecs/releases/tag/v6.2.0
+  # Pinned commit: https://github.com/terraform-aws-modules/terraform-aws-ecs/commit/1553f58d5c9d71afd1b87ebf99ab8d150108e1d5
+  source = "git::https://github.com/terraform-aws-modules/terraform-aws-ecs.git//modules/service?ref=1553f58d5c9d71afd1b87ebf99ab8d150108e1d5"
 
   name = var.service_name
 
