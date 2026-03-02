@@ -12,11 +12,12 @@ data "aws_region" "current" {}
 locals {
   effective_event_mode = var.event_mode != null ? var.event_mode : local.idvh_config.event_mode
 
-  effective_autoscaling = (
-    local.effective_event_mode && local.idvh_config.event_autoscaling != null
-    ? local.idvh_config.event_autoscaling
-    : local.idvh_config.autoscaling
-  )
+  effective_autoscaling = {
+    enable        = local.idvh_config.autoscaling.enable
+    desired_count = (local.effective_event_mode && local.idvh_config.event_autoscaling != null) ? local.idvh_config.event_autoscaling.desired_count : local.idvh_config.autoscaling.desired_count
+    min_capacity  = (local.effective_event_mode && local.idvh_config.event_autoscaling != null) ? local.idvh_config.event_autoscaling.min_capacity : local.idvh_config.autoscaling.min_capacity
+    max_capacity  = (local.effective_event_mode && local.idvh_config.event_autoscaling != null) ? local.idvh_config.event_autoscaling.max_capacity : local.idvh_config.autoscaling.max_capacity
+  }
 
   effective_environment_variables = concat(local.idvh_config.environment_variables, var.environment_variables)
 }
@@ -93,7 +94,7 @@ module "ecs_service" {
     }
   }
 
-  enable_autoscaling       = local.idvh_config.autoscaling.enable
+  enable_autoscaling       = local.effective_autoscaling.enable
   autoscaling_min_capacity = local.effective_autoscaling.min_capacity
   autoscaling_max_capacity = local.effective_autoscaling.max_capacity
   desired_count            = local.effective_autoscaling.desired_count
