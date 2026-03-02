@@ -1,6 +1,6 @@
 mock_provider "aws" {}
 
-run "plan_with_fargate_capacity_provider" {
+run "plan_with_default_capacity_provider" {
   command = plan
 
   module {
@@ -15,12 +15,10 @@ run "plan_with_fargate_capacity_provider" {
     cluster_name              = "onemail-dev-ecs-cluster"
     enable_container_insights = true
 
-    fargate_capacity_providers = {
+    default_capacity_provider_strategy = {
       FARGATE = {
-        default_capacity_provider_strategy = {
-          weight = 100
-          base   = 1
-        }
+        weight = 100
+        base   = 1
       }
     }
   }

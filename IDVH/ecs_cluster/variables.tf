@@ -29,9 +29,9 @@ variable "enable_container_insights" {
   default     = null
 }
 
-variable "fargate_capacity_providers" {
+variable "default_capacity_provider_strategy" {
   type        = any
-  description = "(Optional) Dynamic Fargate capacity provider configuration override. If null, fargate_capacity_providers from IDVH tier YAML is used."
+  description = "(Optional) Dynamic default capacity provider strategy override. If null, default_capacity_provider_strategy from IDVH tier YAML is used."
   default     = null
 }
 
