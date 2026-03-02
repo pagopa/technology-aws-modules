@@ -15,9 +15,9 @@ locals {
 }
 
 module "cluster_raw" {
-  # Release URL: https://github.com/terraform-aws-modules/terraform-aws-ecs/releases/tag/v6.0.0
-  # Module source: terraform-aws-modules/ecs/aws ~> 6.0.0
-  source = "git::https://github.com/terraform-aws-modules/terraform-aws-ecs.git?ref=cfd967a4790b541b722ff94692588657b77d62ed"
+  # Release URL: https://github.com/terraform-aws-modules/terraform-aws-ecs/releases/tag/v5.11.1
+  # Module source: terraform-aws-modules/ecs/aws ~> 5.11.1
+  source = "git::https://github.com/terraform-aws-modules/terraform-aws-ecs.git?ref=84cf54a603c9d976a150ec6aea4ab63eb0efd773"
 
   cluster_name = var.cluster_name
 
