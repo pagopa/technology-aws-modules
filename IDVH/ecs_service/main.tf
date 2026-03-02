@@ -42,9 +42,9 @@ resource "aws_iam_policy" "task" {
 }
 
 module "ecs_service" {
-  # Release URL: https://github.com/terraform-aws-modules/terraform-aws-ecs/releases/tag/v7.0.0
-  # Module source: terraform-aws-modules/ecs/aws ~> 7.0.0
-  source = "git::https://github.com/terraform-aws-modules/terraform-aws-ecs.git//modules/service?ref=31e74f20297b1f66786ad3b0d2d5787d4ade2f60"
+  # Release URL: https://github.com/terraform-aws-modules/terraform-aws-ecs/releases/tag/v6.0.0
+  # Module source: terraform-aws-modules/ecs/aws ~> 6.0.0
+  source = "git::https://github.com/terraform-aws-modules/terraform-aws-ecs.git//modules/service?ref=cfd967a4790b541b722ff94692588657b77d62ed"
 
   name = var.service_name
 
