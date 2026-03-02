@@ -11,24 +11,24 @@ locals {
   idvh_config = module.idvh_loader.idvh_resource_configuration
 
   effective_enable_container_insights = var.enable_container_insights != null ? var.enable_container_insights : local.idvh_config.enable_container_insights
-  effective_fargate_capacity_providers = var.fargate_capacity_providers != null ? var.fargate_capacity_providers : local.idvh_config.fargate_capacity_providers
+  effective_default_capacity_provider_strategy = var.default_capacity_provider_strategy != null ? var.default_capacity_provider_strategy : local.idvh_config.default_capacity_provider_strategy
 }
 
 module "cluster_raw" {
-  # Release URL: https://github.com/terraform-aws-modules/terraform-aws-ecs/releases/tag/v5.11.1
-  # Module source: terraform-aws-modules/ecs/aws ~> 5.11.1
-  source = "git::https://github.com/terraform-aws-modules/terraform-aws-ecs.git?ref=84cf54a603c9d976a150ec6aea4ab63eb0efd773"
+  # Release URL: https://github.com/terraform-aws-modules/terraform-aws-ecs/releases/tag/v6.0.0
+  # Pinned commit: https://github.com/terraform-aws-modules/terraform-aws-ecs/commit/cfd967a4790b541b722ff94692588657b77d62ed
+  source = "git::https://github.com/terraform-aws-modules/terraform-aws-ecs.git?ref=cfd967a4790b541b722ff94692588657b77d62ed"
 
   cluster_name = var.cluster_name
 
-  cluster_settings = [
+  cluster_setting = [
     {
       name  = "containerInsights"
       value = local.effective_enable_container_insights ? "enabled" : "disabled"
     },
   ]
 
-  fargate_capacity_providers = local.effective_fargate_capacity_providers
+  default_capacity_provider_strategy = local.effective_default_capacity_provider_strategy
 
   tags = merge(
     var.tags,
