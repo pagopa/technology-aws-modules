@@ -122,7 +122,7 @@ module "ecs_service" {
       policy_type = "StepScaling"
       step_scaling_policy_configuration = {
         adjustment_type = "ChangeInCapacity"
-        step_adjustment = [
+        step_adjustments = [
           {
             scaling_adjustment          = local.idvh_config.cpu_high_scaling_adjustment
             metric_interval_lower_bound = 0
@@ -135,7 +135,7 @@ module "ecs_service" {
       policy_type = "StepScaling"
       step_scaling_policy_configuration = {
         adjustment_type = "ChangeInCapacity"
-        step_adjustment = [
+        step_adjustments = [
           {
             scaling_adjustment          = -1
             metric_interval_lower_bound = 0
