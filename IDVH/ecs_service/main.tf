@@ -78,7 +78,7 @@ module "ecs_service" {
         },
       ]
 
-      log_configuration = {
+      logConfiguration = {
         logDriver = "awslogs"
         options = {
           awslogs-group         = aws_cloudwatch_log_group.service.name
@@ -90,7 +90,7 @@ module "ecs_service" {
 
       environment = local.effective_environment_variables
 
-      readonly_root_filesystem = false
+      readonlyRootFilesystem = false
     }
   }
 
