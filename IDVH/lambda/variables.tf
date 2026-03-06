@@ -40,6 +40,12 @@ variable "memory_size" {
   default     = null
 }
 
+variable "reserved_concurrent_executions" {
+  type        = number
+  description = "(Optional) Number of reserved concurrent executions for the Lambda function"
+  default     = null
+}
+
 variable "environment_variables" {
   type        = map(string)
   description = "(Optional) Lambda environment variables"
