@@ -1,7 +1,7 @@
 # Tier base: Lambda standard per uat con code bucket creato automaticamente da IDVH.
 standard:
-  runtime: provided.al2023
-  handler: bootstrap
+  runtime: nodejs24.x
+  handler: index.handler
   architectures: ["x86_64"]
   memory_size: 512
   timeout: 30
@@ -19,10 +19,10 @@ standard:
       - lambda:UpdateFunctionCode
       - lambda:UpdateFunctionConfiguration
 
-# Tier alternativo: Lambda standard per uat con code bucket esterno (non creato dal modulo).
+# Tier alternativo: Lambda standard per prod con code bucket esterno (non creato dal modulo).
 standard_external_code_bucket:
-  runtime: provided.al2023
-  handler: bootstrap
+  runtime: nodejs24.x
+  handler: index.handler
   architectures: ["x86_64"]
   memory_size: 512
   timeout: 30

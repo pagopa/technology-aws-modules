@@ -55,8 +55,9 @@ module "lambda_raw" {
   ignore_source_code_hash = local.idvh_config.ignore_source_code_hash
   publish                 = local.idvh_config.publish
 
-  memory_size = coalesce(var.memory_size, local.idvh_config.memory_size)
-  timeout     = local.idvh_config.timeout
+  memory_size                    = coalesce(var.memory_size, local.idvh_config.memory_size)
+  timeout                        = local.idvh_config.timeout
+  reserved_concurrent_executions = var.reserved_concurrent_executions
 
   environment_variables = var.environment_variables
 
