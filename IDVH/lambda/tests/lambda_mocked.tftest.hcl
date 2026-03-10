@@ -49,6 +49,7 @@ run "plan_with_mocked_aws_and_external_bucket" {
 
     existing_code_bucket_name = "external-code-bucket"
     existing_code_bucket_arn  = "arn:aws:s3:::external-code-bucket"
+    github_deploy_role_name   = "oml-dev-euc1-deploy-lambda"
 
     vpc_subnet_ids         = ["subnet-0123456789abcdef0"]
     vpc_security_group_ids = ["sg-0123456789abcdef0"]
@@ -67,5 +68,33 @@ run "plan_with_mocked_aws_and_external_bucket" {
   assert {
     condition     = output.github_lambda_deploy_role_arn == null
     error_message = "Expected deploy role output to be null when github_repository is not set."
+  }
+}
+
+run "plan_with_deploy_role_enabled_and_custom_role_name" {
+  command = plan
+
+  module {
+    source = "./"
+  }
+
+  variables {
+    product_name       = "onemail"
+    env                = "dev"
+    idvh_resource_tier = "standard_external_code_bucket"
+
+    name         = "onemail-dev-lambda-test"
+    package_path = "./tests/test_lambda_packages/test.zip"
+
+    existing_code_bucket_name = "external-code-bucket"
+    existing_code_bucket_arn  = "arn:aws:s3:::external-code-bucket"
+
+    github_repository       = "pagopa/technology-aws-modules"
+    github_deploy_role_name = "oml-dev-euc1-deploy-lambda"
+  }
+
+  assert {
+    condition     = output.github_lambda_deploy_role_arn == "arn:aws:iam::123456789012:role/oml-dev-euc1-deploy-lambda"
+    error_message = "Expected deploy role ARN to use github_deploy_role_name when provided."
   }
 }
