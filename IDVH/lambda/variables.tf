@@ -70,29 +70,6 @@ variable "vpc_security_group_ids" {
   default     = []
 }
 
-variable "existing_code_bucket_name" {
-  type        = string
-  description = "(Optional) Existing bucket name used by tiers where code_bucket.enabled is false"
-  default     = null
-}
-
-variable "existing_code_bucket_arn" {
-  type        = string
-  description = "(Optional) Existing bucket ARN used by tiers where code_bucket.enabled is false"
-  default     = null
-}
-
-variable "github_repository" {
-  type        = string
-  description = "(Optional) GitHub repository in format org/repo, required to create deploy role"
-  default     = null
-}
-
-variable "github_deploy_role_name" {
-  type        = string
-  description = "(Required) IAM name for GitHub Lambda deploy role and policy"
-}
-
 variable "tags" {
   type        = map(string)
   description = "(Optional) Tags to apply to resources"
