@@ -88,6 +88,11 @@ variable "github_repository" {
   default     = null
 }
 
+variable "github_deploy_role_name" {
+  type        = string
+  description = "(Required) IAM name for GitHub Lambda deploy role and policy"
+}
+
 variable "tags" {
   type        = map(string)
   description = "(Optional) Tags to apply to resources"

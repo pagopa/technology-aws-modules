@@ -9,13 +9,15 @@ module "idvh_loader" {
 
 data "aws_caller_identity" "current" {}
 
+resource "random_string" "code_bucket_suffix" {
+  length  = 4
+  special = false
+  upper   = false
+}
+
 locals {
   code_bucket_tier = try(local.idvh_config.code_bucket.idvh_resource_tier, null)
-  requested_code_bucket_basename = join("-", compact([
-    try(local.idvh_config.code_bucket.name_prefix, null),
-    var.name,
-    try(local.idvh_config.code_bucket.name_suffix, null),
-  ]))
+  requested_code_bucket_basename = "lambda-code-${random_string.code_bucket_suffix.result}"
 
   attach_network_policy = length(var.vpc_subnet_ids) > 0 && length(var.vpc_security_group_ids) > 0
 
@@ -76,7 +78,7 @@ module "lambda_raw" {
 resource "aws_iam_role" "github_lambda_deploy" {
   count = local.github_deploy_role_enabled ? 1 : 0
 
-  name        = "${var.name}-deploy-lambda"
+  name        = var.github_deploy_role_name
   description = "Role to deploy Lambda functions with GitHub Actions"
 
   assume_role_policy = jsonencode({
@@ -105,7 +107,7 @@ resource "aws_iam_role" "github_lambda_deploy" {
 resource "aws_iam_policy" "deploy_lambda" {
   count = local.github_deploy_role_enabled ? 1 : 0
 
-  name        = "${var.name}-deploy-lambda"
+  name        = var.github_deploy_role_name
   description = "Policy to deploy Lambda and upload artifacts to code bucket"
 
   policy = jsonencode({
