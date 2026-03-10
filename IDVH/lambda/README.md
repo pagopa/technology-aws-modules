@@ -5,15 +5,11 @@ Wrapper module for AWS Lambda that loads dynamic configuration from the IDVH YAM
 - `env`
 - `idvh_resource_tier`
 
-IDVH rule: structural parameters (for example `runtime`, `handler`, `architectures`, `timeout`, `publish`, log retention, code bucket behavior) are defined by the selected YAML tier.
-
-When `code_bucket.enabled = true`, this module creates a code bucket using the naming pattern `lambda-code-<randomsuffix>`.
-
-When `deploy_role.enabled = true` and `github_repository` is set, this module creates a GitHub deploy IAM role and policy using the required input `github_deploy_role_name`.
+IDVH rule: structural parameters (for example `runtime`, `handler`, `architectures`, `timeout`, `publish`, and log retention) are defined by the selected YAML tier.
+This module does not create the code bucket; you can pass an existing bucket name/ARN for output exposure.
 
 This module uses:
 - the raw Lambda module from `terraform-aws-modules` (pinned by commit hash)
-- the IDVH `s3_bucket` module (`source = "../s3_bucket"`) when the tier requires code bucket creation
 
 ## Available tiers
 
@@ -28,9 +24,6 @@ module "lambda_standard" {
   product_name       = "example"
   env                = "dev"
   idvh_resource_tier = "standard"
-
-  github_repository       = "your-org/your-repo"
-  github_deploy_role_name = "oml-dev-euc1-deploy-lambda"
 
   name         = "example-dev-lambda"
   package_path = "./artifacts/lambda.zip"
@@ -51,9 +44,6 @@ module "lambda_external_code_bucket" {
   product_name       = "example"
   env                = "dev"
   idvh_resource_tier = "standard_external_code_bucket"
-
-  github_repository       = "your-org/your-repo"
-  github_deploy_role_name = "oml-dev-euc1-deploy-lambda"
 
   name         = "example-dev-lambda"
   package_path = "./artifacts/lambda.zip"

@@ -7,36 +7,8 @@ module "idvh_loader" {
   idvh_resource_type = "lambda"
 }
 
-data "aws_caller_identity" "current" {}
-
-resource "random_string" "code_bucket_suffix" {
-  length  = 4
-  special = false
-  upper   = false
-}
-
 locals {
-  code_bucket_tier = try(local.idvh_config.code_bucket.idvh_resource_tier, null)
-  requested_code_bucket_basename = "lambda-code-${random_string.code_bucket_suffix.result}"
-
   attach_network_policy = length(var.vpc_subnet_ids) > 0 && length(var.vpc_security_group_ids) > 0
-
-  code_bucket_arn  = local.create_code_bucket ? module.code_bucket[0].arn : var.existing_code_bucket_arn
-  code_bucket_name = local.create_code_bucket ? module.code_bucket[0].name : var.existing_code_bucket_name
-
-  github_deploy_role_enabled = try(local.idvh_config.deploy_role.enabled, false) && var.github_repository != null
-}
-
-module "code_bucket" {
-  count  = local.create_code_bucket ? 1 : 0
-  source = "../s3_bucket"
-
-  product_name       = var.product_name
-  env                = var.env
-  idvh_resource_tier = local.code_bucket_tier
-
-  name = local.requested_code_bucket_basename
-  tags = var.tags
 }
 
 module "lambda_raw" {
@@ -73,72 +45,4 @@ module "lambda_raw" {
   vpc_security_group_ids = local.attach_network_policy ? var.vpc_security_group_ids : []
 
   tags = var.tags
-}
-
-resource "aws_iam_role" "github_lambda_deploy" {
-  count = local.github_deploy_role_enabled ? 1 : 0
-
-  name        = var.github_deploy_role_name
-  description = "Role to deploy Lambda functions with GitHub Actions"
-
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Effect = "Allow"
-        Principal = {
-          Federated = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:oidc-provider/token.actions.githubusercontent.com"
-        }
-        Action = "sts:AssumeRoleWithWebIdentity"
-        Condition = {
-          StringLike = {
-            "token.actions.githubusercontent.com:sub" = ["repo:${var.github_repository}:*"]
-          }
-          "ForAllValues:StringEquals" = {
-            "token.actions.githubusercontent.com:iss" = "https://token.actions.githubusercontent.com"
-            "token.actions.githubusercontent.com:aud" = "sts.amazonaws.com"
-          }
-        }
-      }
-    ]
-  })
-}
-
-resource "aws_iam_policy" "deploy_lambda" {
-  count = local.github_deploy_role_enabled ? 1 : 0
-
-  name        = var.github_deploy_role_name
-  description = "Policy to deploy Lambda and upload artifacts to code bucket"
-
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = concat(
-      [
-        {
-          Effect   = "Allow"
-          Action   = local.idvh_config.deploy_role.lambda_actions
-          Resource = "*"
-        },
-      ],
-      local.code_bucket_arn != null ? [
-        {
-          Effect = "Allow"
-          Action = [
-            "s3:PutObject",
-            "s3:GetObject",
-          ]
-          Resource = [
-            "${local.code_bucket_arn}/*",
-          ]
-        }
-      ] : []
-    )
-  })
-}
-
-resource "aws_iam_role_policy_attachment" "deploy_lambda" {
-  count = local.github_deploy_role_enabled ? 1 : 0
-
-  role       = aws_iam_role.github_lambda_deploy[0].name
-  policy_arn = aws_iam_policy.deploy_lambda[0].arn
 }
