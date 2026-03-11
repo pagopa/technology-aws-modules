@@ -1,7 +1,7 @@
 # Tier base: Lambda standard per dev.
 standard:
   runtime: nodejs24.x
-  handler: index.handler
+  handler: dist/app.handler
   architectures: ["x86_64"]
   memory_size: 512
   timeout: 30
@@ -12,7 +12,7 @@ standard:
 # Tier alternativo: Lambda standard per dev.
 standard_external_code_bucket:
   runtime: nodejs24.x
-  handler: index.handler
+  handler: dist/app.handler
   architectures: ["x86_64"]
   memory_size: 512
   timeout: 30
