@@ -10,8 +10,9 @@ This module:
 - Supports range keys, GSI/LSI, TTL, streams, deletion protection, and global tables
 - Automatically uses the module KMS key ARN for replicas when `kms_key_arn` is not explicitly set
 - Keeps replication disabled by default and enables DynamoDB/KMS replication only when `enable_replication = true`
+- Reads table behavior defaults from `dynamodb.yml` tier values (with optional per-call overrides in `table_config`)
 
-IDVH rule: `dynamodb.yml` keeps only KMS defaults (`kms_ssm_enable_rotation`, `kms_rotation_period_in_days`).
+IDVH rule: `dynamodb.yml` defines KMS and table defaults (`enable_point_in_time_recovery`, `billing_mode`, stream/ttl flags, GSI/LSI defaults, replica defaults).
 
 ## IDVH resources available
 [Here's](./LIBRARY.md) the list of `idvh_resource_tier` available for this module.
@@ -129,18 +130,18 @@ variable "dynamodb_table_config" {
     hash_key                    = string
     range_key                   = optional(string)
     attributes                  = list(object({ name = string, type = string }))
-    billing_mode                = optional(string, "PAY_PER_REQUEST")
-    stream_enabled              = optional(bool, false)
+    billing_mode                = optional(string)
+    stream_enabled              = optional(bool)
     stream_view_type            = optional(string)
-    ttl_enabled                 = optional(bool, false)
-    ttl_attribute_name          = optional(string, "")
-    deletion_protection_enabled = optional(bool, false)
-    global_secondary_indexes    = optional(any, [])
-    local_secondary_indexes     = optional(any, [])
+    ttl_enabled                 = optional(bool)
+    ttl_attribute_name          = optional(string)
+    deletion_protection_enabled = optional(bool)
+    global_secondary_indexes    = optional(any)
+    local_secondary_indexes     = optional(any)
     replica_regions = optional(list(object({
       region_name = string
       kms_key_arn = optional(string)
-    })), [])
+    })))
   })
 }
 

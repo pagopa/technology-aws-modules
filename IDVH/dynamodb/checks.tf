@@ -4,6 +4,16 @@ locals {
   required_tier_keys = toset([
     "kms_ssm_enable_rotation",
     "kms_rotation_period_in_days",
+    "enable_point_in_time_recovery",
+    "billing_mode",
+    "stream_enabled",
+    "stream_view_type",
+    "ttl_enabled",
+    "ttl_attribute_name",
+    "deletion_protection_enabled",
+    "global_secondary_indexes",
+    "local_secondary_indexes",
+    "replica_regions",
   ])
 
   missing_tier_keys = setsubtract(local.required_tier_keys, toset(keys(local.idvh_config)))
@@ -33,18 +43,34 @@ check "dynamodb_yaml_types" {
   assert {
     condition = (
       can(tobool(local.idvh_config.kms_ssm_enable_rotation)) &&
-      can(tonumber(local.idvh_config.kms_rotation_period_in_days))
+      can(tonumber(local.idvh_config.kms_rotation_period_in_days)) &&
+      can(tobool(local.idvh_config.enable_point_in_time_recovery)) &&
+      can(tostring(local.idvh_config.billing_mode)) &&
+      can(tobool(local.idvh_config.stream_enabled)) &&
+      (local.idvh_config.stream_view_type == null || can(tostring(local.idvh_config.stream_view_type))) &&
+      can(tobool(local.idvh_config.ttl_enabled)) &&
+      (local.idvh_config.ttl_attribute_name == null || can(tostring(local.idvh_config.ttl_attribute_name))) &&
+      can(tobool(local.idvh_config.deletion_protection_enabled)) &&
+      can(length(local.idvh_config.global_secondary_indexes)) &&
+      can(length(local.idvh_config.local_secondary_indexes)) &&
+      can([for replica in local.idvh_config.replica_regions : tostring(replica.region_name)]) &&
+      can([for replica in local.idvh_config.replica_regions : lookup(replica, "kms_key_arn", null) == null || can(tostring(lookup(replica, "kms_key_arn", null)))])
     )
 
-    error_message = "Invalid dynamodb tier YAML types. Check kms_ssm_enable_rotation and kms_rotation_period_in_days values."
+    error_message = "Invalid dynamodb tier YAML types. Check KMS, PITR and table default values."
   }
 }
 
 check "dynamodb_yaml_values" {
   assert {
-    condition = local.idvh_config.kms_rotation_period_in_days > 0
+    condition = (
+      local.idvh_config.kms_rotation_period_in_days > 0 &&
+      contains(["PAY_PER_REQUEST", "PROVISIONED"], local.idvh_config.billing_mode) &&
+      (!local.idvh_config.stream_enabled || (local.idvh_config.stream_view_type != null && length(trimspace(local.idvh_config.stream_view_type)) > 0)) &&
+      (!local.idvh_config.ttl_enabled || (local.idvh_config.ttl_attribute_name != null && length(trimspace(local.idvh_config.ttl_attribute_name)) > 0))
+    )
 
-    error_message = "Invalid dynamodb tier YAML values. kms_rotation_period_in_days must be greater than zero."
+    error_message = "Invalid dynamodb tier YAML values. Check KMS rotation period and table defaults (billing/stream/ttl)."
   }
 }
 
