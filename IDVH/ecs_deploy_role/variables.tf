@@ -1,6 +1,27 @@
+variable "product_name" {
+  type        = string
+  description = "(Required) Product name used to identify the catalog to be used"
+
+  validation {
+    condition     = length(var.product_name) <= 12
+    error_message = "Max length is 12 chars."
+  }
+}
+
+variable "env" {
+  type        = string
+  description = "(Required) Environment for which the resource will be created"
+}
+
+variable "idvh_resource_tier" {
+  type        = string
+  description = "(Required) The IDVH resource tier key to be created"
+}
+
 variable "enabled" {
   type        = bool
-  description = "(Required) Enable deploy role creation"
+  description = "(Optional) Dynamic override for deploy role creation. If null, enabled from IDVH tier YAML is used."
+  default     = null
 }
 
 variable "service_name" {
@@ -16,12 +37,14 @@ variable "github_repository" {
 
 variable "ecr_actions" {
   type        = list(string)
-  description = "(Required) IAM actions for ECR deployment operations"
+  description = "(Optional) Dynamic override for ECR deployment IAM actions. If null, values from IDVH tier YAML are used."
+  default     = null
 }
 
 variable "ecs_actions" {
   type        = list(string)
-  description = "(Required) IAM actions for ECS deployment operations"
+  description = "(Optional) Dynamic override for ECS deployment IAM actions. If null, values from IDVH tier YAML are used."
+  default     = null
 }
 
 variable "pass_role_arns" {
@@ -31,14 +54,14 @@ variable "pass_role_arns" {
 
 variable "role_description" {
   type        = string
-  description = "(Optional) IAM role description"
-  default     = "Role to deploy ECS service with GitHub Actions."
+  description = "(Optional) Dynamic override for the IAM role description. If null, the value from IDVH tier YAML is used."
+  default     = null
 }
 
 variable "policy_description" {
   type        = string
-  description = "(Optional) IAM policy description"
-  default     = "Policy to allow GitHub Actions deployments on ECS service."
+  description = "(Optional) Dynamic override for the IAM policy description. If null, the value from IDVH tier YAML is used."
+  default     = null
 }
 
 variable "tags" {

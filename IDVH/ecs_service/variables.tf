@@ -68,6 +68,24 @@ variable "task_policy_json" {
   default     = null
 }
 
+variable "create_deploy_role" {
+  type        = bool
+  description = "(Optional) When true, also creates the sibling ecs_deploy_role module using the same IDVH tier."
+  default     = false
+}
+
+variable "deploy_role_github_repository" {
+  type        = string
+  description = "(Optional) GitHub repository in org/repo format used by the optional ecs_deploy_role module."
+  default     = null
+}
+
+variable "deploy_role_additional_pass_role_arns" {
+  type        = list(string)
+  description = "(Optional) Additional IAM role ARNs appended to the pass_role_arns automatically derived for the optional ecs_deploy_role module."
+  default     = []
+}
+
 variable "event_mode" {
   type        = bool
   description = "(Optional) Dynamic event-mode override. If null, event_mode from IDVH tier YAML is used."

@@ -1,14 +1,29 @@
+module "idvh_loader" {
+  source = "../01_idvh_loader"
+
+  product_name       = var.product_name
+  env                = var.env
+  idvh_resource_tier = var.idvh_resource_tier
+  idvh_resource_type = "ecs_deploy_role"
+}
+
 data "aws_caller_identity" "current" {}
 
 locals {
-  role_enabled = var.enabled && var.github_repository != null
+  effective_enabled            = var.enabled != null ? var.enabled : local.idvh_config.enabled
+  effective_ecr_actions        = var.ecr_actions != null ? var.ecr_actions : local.idvh_config.ecr_actions
+  effective_ecs_actions        = var.ecs_actions != null ? var.ecs_actions : local.idvh_config.ecs_actions
+  effective_role_description   = var.role_description != null ? var.role_description : local.idvh_config.role_description
+  effective_policy_description = var.policy_description != null ? var.policy_description : local.idvh_config.policy_description
+
+  role_enabled = local.effective_enabled && var.github_repository != null
 }
 
 resource "aws_iam_role" "deploy" {
   count = local.role_enabled ? 1 : 0
 
   name        = "${var.service_name}-deploy-ecs"
-  description = var.role_description
+  description = local.effective_role_description
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -44,7 +59,7 @@ resource "aws_iam_policy" "deploy" {
   count = local.role_enabled ? 1 : 0
 
   name        = "${var.service_name}-deploy-ecs"
-  description = var.policy_description
+  description = local.effective_policy_description
 
   policy = jsonencode({
     Version = "2012-10-17"
@@ -52,13 +67,13 @@ resource "aws_iam_policy" "deploy" {
       {
         Sid      = "ECRPublish"
         Effect   = "Allow"
-        Action   = var.ecr_actions
+        Action   = local.effective_ecr_actions
         Resource = ["*"]
       },
       {
         Sid      = "ECSTaskDefinition"
         Effect   = "Allow"
-        Action   = var.ecs_actions
+        Action   = local.effective_ecs_actions
         Resource = "*"
       },
       {

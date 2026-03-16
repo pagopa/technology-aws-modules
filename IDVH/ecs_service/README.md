@@ -2,11 +2,12 @@
 
 Independent wrapper module for one ECS service.
 
-This module does not create ECR repositories, ECS clusters, NLBs, or deploy roles.
-It only creates and configures:
+This module does not create ECR repositories, ECS clusters, or NLBs.
+It creates and configures:
 - one ECS service
 - one CloudWatch log group
 - optional task IAM policy
+- optional sibling deploy role through `IDVH/ecs_deploy_role`
 
 Structural defaults are loaded from the IDVH YAML tier using:
 - `product_name`
@@ -35,5 +36,8 @@ module "ecs" {
   private_subnets    = ["subnet-0123456789abcdef0"]
   target_group_arn   = "arn:aws:elasticloadbalancing:eu-west-1:123456789012:targetgroup/example/1234567890abcdef"
   nlb_security_group_id = "sg-0123456789abcdef0"
+
+  create_deploy_role           = true
+  deploy_role_github_repository = "your-org/example"
 }
 ```

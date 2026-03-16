@@ -181,3 +181,24 @@ module "ecs_service" {
     }
   )
 }
+
+module "ecs_deploy_role" {
+  count  = var.create_deploy_role ? 1 : 0
+  source = "../ecs_deploy_role"
+
+  product_name       = var.product_name
+  env                = var.env
+  idvh_resource_tier = var.idvh_resource_tier
+
+  service_name      = var.service_name
+  github_repository = var.deploy_role_github_repository
+  pass_role_arns = concat(
+    [
+      module.ecs_service.tasks_iam_role_arn,
+      module.ecs_service.task_exec_iam_role_arn,
+    ],
+    var.deploy_role_additional_pass_role_arns
+  )
+
+  tags = var.tags
+}
