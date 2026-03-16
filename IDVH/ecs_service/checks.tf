@@ -132,9 +132,17 @@ check "ecs_dynamic_inputs" {
       length(trimspace(var.target_group_arn)) > 0 &&
       length(trimspace(var.nlb_security_group_id)) > 0 &&
       length(var.private_subnets) > 0 &&
-      alltrue([for subnet in var.private_subnets : length(trimspace(subnet)) > 0])
+      alltrue([for subnet in var.private_subnets : length(trimspace(subnet)) > 0]) &&
+      (
+        !var.create_deploy_role ||
+        (
+          var.deploy_role_github_repository != null &&
+          length(trimspace(var.deploy_role_github_repository)) > 0 &&
+          alltrue([for role_arn in var.deploy_role_additional_pass_role_arns : length(trimspace(role_arn)) > 0])
+        )
+      )
     )
 
-    error_message = "Invalid ECS dynamic inputs. Provide service/container names, image, cluster ARN, target group ARN, NLB security group ID and non-empty private subnets."
+    error_message = "Invalid ECS dynamic inputs. Provide service/container names, image, cluster ARN, target group ARN, NLB security group ID, non-empty private subnets and, when create_deploy_role is true, a non-empty deploy_role_github_repository."
   }
 }
