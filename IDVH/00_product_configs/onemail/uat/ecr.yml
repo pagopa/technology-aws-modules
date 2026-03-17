@@ -2,5 +2,5 @@ standard:
   repositories:
     core:
       number_of_images_to_keep: 60
-      repository_image_tag_mutability: IMMUTABLE
+      repository_image_tag_mutability: MUTABLE
     
