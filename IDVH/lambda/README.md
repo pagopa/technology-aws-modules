@@ -11,6 +11,8 @@ This module does not create the code bucket; you can pass an existing bucket nam
 This module uses:
 - the raw Lambda module from `terraform-aws-modules` (pinned by commit hash)
 
+If `lambda_policy_json` is built from values that are unknown during plan, set `attach_lambda_policy_json = true` explicitly. This avoids plan-time failures caused by the upstream module using the attach toggle in a `count` expression.
+
 ## Available tiers
 
 The full catalog is in [LIBRARY.md](./LIBRARY.md).
@@ -55,5 +57,35 @@ module "lambda_external_code_bucket" {
     Project = "example"
     Env     = "dev"
   }
+}
+```
+
+## Example: computed IAM policy JSON
+
+```hcl
+data "aws_iam_policy_document" "lambda_extra" {
+  statement {
+    effect = "Allow"
+
+    actions = [
+      "xray:GetSamplingStatisticSummaries",
+    ]
+
+    resources = ["*"]
+  }
+}
+
+module "lambda_with_policy" {
+  source = "git::https://github.com/your-org/your-terraform-modules.git//IDVH/lambda?ref=main"
+
+  product_name       = "example"
+  env                = "dev"
+  idvh_resource_tier = "standard"
+
+  name         = "example-dev-lambda"
+  package_path = "./artifacts/lambda.zip"
+
+  attach_lambda_policy_json = true
+  lambda_policy_json        = data.aws_iam_policy_document.lambda_extra.json
 }
 ```
