@@ -58,6 +58,12 @@ variable "lambda_policy_json" {
   default     = null
 }
 
+variable "attach_lambda_policy_json" {
+  type        = bool
+  description = "(Optional) Explicit toggle for attaching lambda_policy_json. Set this to true when lambda_policy_json is computed from values that are unknown during plan."
+  default     = null
+}
+
 variable "vpc_subnet_ids" {
   type        = list(string)
   description = "(Optional) VPC subnet ids for lambda. If empty, lambda is deployed outside VPC"

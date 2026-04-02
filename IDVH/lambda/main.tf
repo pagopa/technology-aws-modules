@@ -9,6 +9,7 @@ module "idvh_loader" {
 
 locals {
   attach_network_policy = length(var.vpc_subnet_ids) > 0 && length(var.vpc_security_group_ids) > 0
+  attach_policy_json    = var.attach_lambda_policy_json != null ? var.attach_lambda_policy_json : var.lambda_policy_json != null
 }
 
 module "lambda_raw" {
@@ -37,7 +38,7 @@ module "lambda_raw" {
 
   cloudwatch_logs_retention_in_days = local.idvh_config.cloudwatch_logs_retention_in_days
 
-  attach_policy_json = var.lambda_policy_json != null
+  attach_policy_json = local.attach_policy_json
   policy_json        = var.lambda_policy_json
 
   attach_network_policy  = local.attach_network_policy
