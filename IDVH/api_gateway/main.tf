@@ -70,7 +70,7 @@ resource "aws_api_gateway_stage" "main" {
   cache_cluster_size    = local.idvh_config.api_cache_cluster_size
 
   xray_tracing_enabled = local.idvh_config.xray_tracing_enabled
-
+  variables            = var.stage_variables
   tags = merge(
     var.tags,
     {
