@@ -34,6 +34,12 @@ variable "stage_name" {
   default     = null
 }
 
+variable "stage_variables" {
+  type        = map(string)
+  description = "(Optional) Dynamic stage variables override for the deployed stage"
+  default     = {}
+}
+
 variable "endpoint_vpc_endpoint_ids" {
   type        = list(string)
   description = "(Optional) Dynamic VPC endpoint IDs override for PRIVATE endpoint configurations"
