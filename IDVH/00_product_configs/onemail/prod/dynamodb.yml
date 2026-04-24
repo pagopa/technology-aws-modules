@@ -7,7 +7,7 @@ standard:
   stream_view_type: null
   ttl_enabled: false
   ttl_attribute_name: null
-  deletion_protection_enabled: false
+  deletion_protection_enabled: true
   global_secondary_indexes: []
   local_secondary_indexes: []
   replica_regions: []
