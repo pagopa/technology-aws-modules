@@ -33,14 +33,14 @@ locals {
   effective_server_side_encryption_kms_key_arn = var.create_kms_key ? module.kms_table_key[0].key_arn : var.server_side_encryption_kms_key_arn
 
   effective_replica_regions = var.enable_replication ? [
-    for replica in local.effective_table_config.replica_regions : merge(
+    for replica in(
+      local.effective_table_config.replica_regions != null
+      ? local.effective_table_config.replica_regions
+      : []
+      ) : merge(
       replica,
       {
-        kms_key_arn = (
-          lookup(replica, "kms_key_arn", null) != null && length(trimspace(lookup(replica, "kms_key_arn", ""))) > 0
-          ? lookup(replica, "kms_key_arn", null)
-          : local.effective_server_side_encryption_kms_key_arn
-        )
+        kms_key_arn = try(length(trimspace(replica.kms_key_arn)) > 0, false) ? trimspace(replica.kms_key_arn) : null
       }
     )
   ] : []
@@ -56,9 +56,9 @@ module "kms_table_key" {
   enable_key_rotation     = local.effective_kms_enable_key_rotation
   rotation_period_in_days = local.effective_kms_rotation_period_in_days
   #policy                  = var.policy
-  enable_default_policy   = true
-  multi_region            = var.enable_replication
-  aliases = [var.kms_alias]
+  enable_default_policy = true
+  multi_region          = var.enable_replication
+  aliases               = [var.kms_alias]
 
   tags = merge(
     var.tags,
