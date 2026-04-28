@@ -30,7 +30,7 @@ locals {
 
   effective_point_in_time_recovery = var.enable_point_in_time_recovery != null ? var.enable_point_in_time_recovery : local.idvh_config.enable_point_in_time_recovery
 
-  effective_server_side_encryption_kms_key_arn = var.create_kms_key ? module.kms_table_key[0].aliases[var.kms_alias].target_key_arn : var.server_side_encryption_kms_key_arn
+  effective_server_side_encryption_kms_key_arn = var.create_kms_key ? module.kms_table_key[0].key_arn : var.server_side_encryption_kms_key_arn
 
   effective_replica_regions = var.enable_replication ? [
     for replica in local.effective_table_config.replica_regions : merge(
