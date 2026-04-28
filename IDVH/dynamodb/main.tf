@@ -32,15 +32,27 @@ locals {
 
   effective_server_side_encryption_kms_key_arn = var.create_kms_key ? module.kms_table_key[0].key_arn : var.server_side_encryption_kms_key_arn
 
+  requested_replica_regions = var.enable_replication ? (
+    local.effective_table_config.replica_regions != null
+    ? local.effective_table_config.replica_regions
+    : []
+  ) : []
+
+  auto_replica_regions = var.enable_replication && var.create_kms_key ? {
+    for replica in local.requested_replica_regions :
+    replica.region_name => replica
+    if !try(length(trimspace(replica.kms_key_arn)) > 0, false)
+  } : {}
+
   effective_replica_regions = var.enable_replication ? [
-    for replica in(
-      local.effective_table_config.replica_regions != null
-      ? local.effective_table_config.replica_regions
-      : []
-      ) : merge(
+    for replica in local.requested_replica_regions : merge(
       replica,
       {
-        kms_key_arn = try(length(trimspace(replica.kms_key_arn)) > 0, false) ? trimspace(replica.kms_key_arn) : null
+        kms_key_arn = (
+          try(length(trimspace(replica.kms_key_arn)) > 0, false)
+          ? trimspace(replica.kms_key_arn)
+          : try(aws_kms_replica_key.replica[replica.region_name].arn, null)
+        )
       }
     )
   ] : []
@@ -55,6 +67,7 @@ module "kms_table_key" {
   key_usage               = "ENCRYPT_DECRYPT"
   enable_key_rotation     = local.effective_kms_enable_key_rotation
   rotation_period_in_days = local.effective_kms_rotation_period_in_days
+  is_enabled              = true
   #policy                  = var.policy
   enable_default_policy = true
   multi_region          = var.enable_replication
@@ -66,6 +79,31 @@ module "kms_table_key" {
       Name = "kms-${local.effective_table_config.table_name}"
     }
   )
+}
+
+resource "aws_kms_replica_key" "replica" {
+  for_each = local.auto_replica_regions
+
+  region          = each.key
+  description     = "${var.kms_description} Replica (${each.key})"
+  enabled         = true
+  primary_key_arn = module.kms_table_key[0].key_arn
+  policy          = module.kms_table_key[0].key_policy
+
+  tags = merge(
+    var.tags,
+    {
+      Name = "kms-${local.effective_table_config.table_name}-${each.key}"
+    }
+  )
+}
+
+resource "aws_kms_alias" "replica" {
+  for_each = local.auto_replica_regions
+
+  region        = each.key
+  name          = "alias/${var.kms_alias}"
+  target_key_id = aws_kms_replica_key.replica[each.key].key_id
 }
 
 module "dynamodb_table" {
@@ -81,7 +119,7 @@ module "dynamodb_table" {
   billing_mode = local.effective_table_config.billing_mode
 
   stream_enabled   = local.effective_table_config.stream_enabled
-  stream_view_type = local.effective_table_config.stream_view_type
+  stream_view_type = local.effective_table_config.stream_enabled ? local.effective_table_config.stream_view_type : null
 
   ttl_enabled        = local.effective_table_config.ttl_enabled
   ttl_attribute_name = local.effective_table_config.ttl_attribute_name
