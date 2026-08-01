@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     env:
-      PRE_COMMIT_IMAGE: ghcr.io/antonbabenko/pre-commit-terraform:v1.108.0@sha256:47d8f4a9b0dd460f7f28e2a5b87ae0f4356c3154c32f020ced0e7dfef4feb83e # pre-commit-terraform v1.108.0
+      PRE_COMMIT_IMAGE: ghcr.io/antonbabenko/pre-commit-terraform:v1.105.0@sha256:4ef4b8323b27fc263535ad88c9d2f20488fcb3b520258e5e7f0553ed5f6692b5 # pre-commit-terraform v1.105.0
       PRE_COMMIT_CONFIG: .pre-commit-config.yaml
       # Local-only validation: Terraform must not reach remote backends.
       TF_INPUT: "0"
