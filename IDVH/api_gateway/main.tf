@@ -11,7 +11,7 @@ locals {
   effective_stage_name = var.stage_name != null ? var.stage_name : local.idvh_config.stage_name
 
   effective_endpoint_vpc_endpoint_ids = var.endpoint_vpc_endpoint_ids != null ? var.endpoint_vpc_endpoint_ids : local.idvh_config.endpoint_configuration.vpc_endpoint_ids
-  effective_api_types = var.endpoint_api_types != null ? var.endpoint_api_types : local.idvh_config.endpoint_configuration.types
+  effective_api_types                 = var.endpoint_api_types != null ? var.endpoint_api_types : local.idvh_config.endpoint_configuration.types
 
   effective_plan_api_key_name = var.plan_api_key_name != null ? var.plan_api_key_name : local.idvh_config.plan.api_key_name
 
@@ -38,8 +38,8 @@ resource "aws_api_gateway_rest_api" "main" {
     types            = local.effective_api_types
     vpc_endpoint_ids = local.effective_endpoint_vpc_endpoint_ids
   }
-  policy = var.policy != null ? var.policy : null
-  disable_execute_api_endpoint =  true 
+  policy                       = var.policy != null ? var.policy : null
+  disable_execute_api_endpoint = true
 
   tags = merge(
     var.tags,

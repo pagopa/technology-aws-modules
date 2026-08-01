@@ -23,7 +23,7 @@ variable "idvh_resource_tier" {
   description = "(Required) The IDVH resource tier name chosen for the resource to be created."
 
   validation {
-    condition     = can(lookup(local.tiers_configurations, var.idvh_resource_tier))
+    condition     = contains(keys(local.tiers_configurations), var.idvh_resource_tier)
     error_message = "Specified idvh_resource_tier '${var.idvh_resource_tier}' not available in catalog for given product_name: '${var.product_name}', env: '${var.env}', idvh_resource_type: '${var.idvh_resource_type}'"
   }
 }

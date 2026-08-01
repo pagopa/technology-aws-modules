@@ -96,7 +96,7 @@ run "plan_with_optional_deploy_role" {
     target_group_arn      = "arn:aws:elasticloadbalancing:eu-west-1:123456789012:targetgroup/core/1234567890abcdef"
     nlb_security_group_id = "sg-0123456789abcdef0"
 
-    create_deploy_role          = true
+    create_deploy_role            = true
     deploy_role_github_repository = "pagopa/onemail"
   }
 

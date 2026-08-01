@@ -89,7 +89,7 @@ variable "api_authorizer_user_pool_arn" {
 }
 
 variable "policy" {
-  type = string
+  type    = string
   default = null
 }
 

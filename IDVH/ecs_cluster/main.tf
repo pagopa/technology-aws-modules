@@ -10,7 +10,7 @@ module "idvh_loader" {
 locals {
   idvh_config = module.idvh_loader.idvh_resource_configuration
 
-  effective_enable_container_insights = var.enable_container_insights != null ? var.enable_container_insights : local.idvh_config.enable_container_insights
+  effective_enable_container_insights          = var.enable_container_insights != null ? var.enable_container_insights : local.idvh_config.enable_container_insights
   effective_default_capacity_provider_strategy = var.default_capacity_provider_strategy != null ? var.default_capacity_provider_strategy : local.idvh_config.default_capacity_provider_strategy
 }
 

@@ -20,8 +20,8 @@ run "plan_with_minimal_table" {
       ]
     }
 
-    create_kms_key = true
-    kms_alias      = "/dynamodb/sessions"
+    create_kms_key     = true
+    kms_alias          = "/dynamodb/sessions"
     enable_replication = false
   }
 
@@ -123,8 +123,8 @@ run "fails_when_create_kms_key_without_alias" {
       ]
     }
 
-    create_kms_key = true
-    kms_alias      = null
+    create_kms_key     = true
+    kms_alias          = null
     enable_replication = false
   }
 
@@ -158,8 +158,8 @@ run "plan_with_replica_without_explicit_kms_key" {
       ]
     }
 
-    create_kms_key = true
-    kms_alias      = "/dynamodb/email-status-history"
+    create_kms_key     = true
+    kms_alias          = "/dynamodb/email-status-history"
     enable_replication = true
   }
 
