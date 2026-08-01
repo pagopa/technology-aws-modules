@@ -1,71 +1,117 @@
-# AGENTS.md - technology-aws-modules
+# AGENTS.md - Repository Operating Core
 
-This file is for AI assistants and GitHub Copilot working in this repository.
+`AGENTS.md` is the primary always-on repository policy entrypoint for coding
+agents in this repository. Keep it compact: it should route agents to the
+nearest owner, avoid duplicated guidance, and require explicit validation.
 
-## Main Instructions
-- Read `.github/copilot-instructions.md` first.
-- Apply relevant path-specific files under `.github/instructions/`.
-- For `IDVH/**` changes, always apply `.github/instructions/idvh.instructions.md`.
+## First Move
 
-## Configuration Files
-- `.github/copilot-instructions.md`
-- `.github/copilot-code-review-instructions.md`
-- `.github/copilot-commit-message-instructions.md`
+- Identify the requested target and nearest owner before broad reading.
+- Read only the evidence needed to choose the smallest valid change and check.
+- Prefer the closest executable validation; report any validation gap explicitly.
 
-## Instruction Files (auto-applied by path)
-- `.github/instructions/bash.instructions.md` — `**/*.sh`
-- `.github/instructions/composite-action.instructions.md` — `.github/actions/**/action.y*ml`
-- `.github/instructions/github-actions.instructions.md` — `.github/workflows/**`
-- `.github/instructions/idvh.instructions.md` — `IDVH/**/*.tf,IDVH/**/*.yml,IDVH/**/*.md,IDVH/**/*.sh,IDVH/**/*.py`
-- `.github/instructions/java.instructions.md` — `**/*.java`
-- `.github/instructions/json.instructions.md` — `**/authorizations/**/*.json,**/organization/**/*.json,**/src/**/*.json,**/data/**/*.json`
-- `.github/instructions/lambda.instructions.md` — `**/*lambda*.tf,**/*lambda*.py,**/*lambda*.js,**/*lambda*.ts`
-- `.github/instructions/makefile.instructions.md` — `**/Makefile,**/*.mk`
-- `.github/instructions/markdown.instructions.md` — `**/*.md`
-- `.github/instructions/nodejs.instructions.md` — `**/*.js,**/*.cjs,**/*.mjs,**/*.ts,**/*.tsx`
-- `.github/instructions/python.instructions.md` — `**/*.py`
-- `.github/instructions/terraform.instructions.md` — `**/*.tf`
-- `.github/instructions/yaml.instructions.md` — `**/*.yml,**/*.yaml`
+## Precedence
 
-## Available Skills
-- `.github/skills/cicd-workflow/SKILL.md`: secure GitHub Actions workflow patterns.
-- `.github/skills/cloud-policy/SKILL.md`: governance policies for AWS SCP, Azure Policy, GCP Org Policy.
-- `.github/skills/composite-action/SKILL.md`: reusable GitHub composite actions.
-- `.github/skills/data-registry/SKILL.md`: structured JSON/YAML registry updates.
-- `.github/skills/idvh-terraform/SKILL.md`: IDVH catalog-driven Terraform standards and workflow.
-- `.github/skills/pr-writing/SKILL.md`: pull request description generation.
-- `.github/skills/project-java/SKILL.md`: Java project components with BDD tests.
-- `.github/skills/project-nodejs/SKILL.md`: Node.js project modules with BDD tests.
-- `.github/skills/script-bash/SKILL.md`: Bash scripts with purpose header and emoji logs.
-- `.github/skills/script-python/SKILL.md`: Python scripts with docstring, tests, and pinned deps.
-- `.github/skills/terraform-feature/SKILL.md`: Terraform resource/variable/output updates.
-- `.github/skills/terraform-module/SKILL.md`: reusable Terraform module structure.
+- Direct user instructions win for the current task unless they require unsafe,
+  destructive, or impossible behavior.
+- Resolve conflicts with the smallest valid owner. Treat broader files as
+  fallback policy, not permission to override narrower contracts.
+- Do not infer active policy from removed files, generated output, historical
+  aliases, or past automation unless it exists on disk and is deliberately
+  reintroduced.
 
-## Available Prompts
-- `.github/prompts/cs-add-unit-tests.prompt.md`: add unit tests for Python, Java, or Node.js.
-- `.github/prompts/cs-bash-script.prompt.md`: create or modify Bash scripts.
-- `.github/prompts/cs-cloud-policy.prompt.md`: create or modify cloud governance policies.
-- `.github/prompts/cs-composite-action.prompt.md`: create or modify composite actions.
-- `.github/prompts/cs-data-registry.prompt.md`: update structured JSON/YAML registries.
-- `.github/prompts/cs-github-action.prompt.md`: create or modify GitHub Actions workflows.
-- `.github/prompts/cs-idvh-terraform.prompt.md`: create/modify/review IDVH modules and catalog.
-- `.github/prompts/cs-java.prompt.md`: create or modify Java project components.
-- `.github/prompts/cs-nodejs.prompt.md`: create or modify Node.js project modules.
-- `.github/prompts/cs-pr-description.prompt.md`: PR description generation.
-- `.github/prompts/cs-python-script.prompt.md`: create or modify Python scripts.
-- `.github/prompts/cs-terraform.prompt.md`: generic Terraform implementation tasks.
+## User Alignment
 
-## Conventions
-- User chat may be Italian, repository content must be English.
-- Keep Terraform identifiers in `snake_case`.
-- Keep structural IDVH behavior in YAML tiers.
-- Keep validation contracts in `checks.tf`.
-- Keep dynamic overrides explicit and minimal.
+- For small, deterministic, low-risk tasks, proceed after identifying the
+  target, nearest owner, and validation path.
+- For non-trivial, ambiguous, architectural, policy, contract, or multi-step
+  work, align with the user before implementation.
 
-## Prohibitions
-- Do not hardcode secrets, account-specific IDs, or environment-specific values in module logic.
-- Do not add empty-string placeholders in IDVH YAML catalog.
-- Do not bypass validation when adding tier keys or nested schema fields.
+## Operating Principles
+
+- Think before acting. Confirm target, nearest owner, bounded evidence, and
+  validation path before broad commands.
+- Make surgical changes. Preserve user work, avoid unrelated refactors, and tie
+  each edit to the requested outcome.
+- Fix the controlling issue where practical instead of layering workarounds.
+- Work toward verified outcomes. Run the closest available validation and report
+  explicit gaps.
+
+## Scope And Placement
+
+- `AGENTS.md` owns stable repository-wide policy, precedence, tactical defaults,
+  ownership boundaries, and routing anchors.
+- `.github/INVENTORY.md` is the exact live inventory of the GitHub Copilot catalog.
+- Do not put long operational procedures, detailed checklists, detailed
+  file-shape recipes, command playbooks, or tool-specific workflows here.
+- Short, globally safe best-practice defaults may live here when they improve
+  baseline behavior without turning this file into a procedure manual.
+- `tmp/` is temporary support only. Treat its contents as disposable working
+  artifacts and do not commit files from `tmp/`.
+
+## Authoring Defaults
+
+- Use Plain Technical English for repository-owned prose unless a narrower owner
+  explicitly overrides it.
+- Prefer short sentences, stable terms, active voice, and explicit `must`,
+  `should`, and `may` wording.
+- Keep required technical names unchanged.
+
+## Tactical Defaults
+
+- Preserve compact working state across turns; avoid rebuilding full context
+  unless new evidence invalidates the current state.
+- Keep one active primary owner per execution lane; load narrower owners only
+  when path, runtime, symptom, or validation evidence proves they are needed.
+- Use bounded evidence: inspect changed sections and failing-validator context
+  first, then expand only when gaps remain.
+- Name the validation path early; if evidence changes it, update the working
+  assumption before editing.
+
+## Delivery And Validation
+
+- Be extremely concise in user-facing reporting without sacrificing clarity,
+  correctness, safety, required evidence, or actionable next steps. Lead with
+  the outcome, omit repetition and incidental process detail, and expand only
+  when requested or necessary.
+- Reason from repository evidence. Do not invent runtimes, validators, sync
+  flows, or tests.
+- For non-trivial work, make target state, anti-scope, assumptions, tradeoffs,
+  and validation path visible before implementation or handoff.
+- When a contract or policy changes, align the owning tests, validators, or docs
+  instead of letting stale checks restore the old behavior.
+
+## Code Changes
+
+- Executable or evaluable behavior changes must use a test-first
+  red-green-refactor loop: define the failing check, make the smallest
+  implementation edit, then rerun the focused check and closest validation.
+- Place tests under repository-root `tests/` using paths that make the owning
+  source or checked behavior obvious. Keep deeper layout conventions in the
+  nearest owner.
+- The failing check must exist before the first implementation edit unless a
+  pre-code testability exception names the gap and alternate validation path.
+- Tests added after implementation are regression coverage only; they must not
+  be represented as test-first work.
+- Exceptions are limited to prose-only docs, generated inventory, mechanical
+  formatting, behavior-neutral renames, read-only validation, or explicit
+  pre-code testability exceptions.
+- If this gate is skipped, agents must stop, disclose the violation, establish
+  the recovery path, and must not claim retroactive red-green-refactor work.
+
+## Agent skills
+
+### Issue tracker
+
+Issues and PRDs are tracked in GitHub Issues for `pagopa/cloud-strategy.github`. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Use the default canonical triage labels. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+This repository uses the single-context domain documentation layout. See `docs/agents/domain.md`.
 
 ## graphify
 
@@ -75,7 +121,7 @@ exists. Use `graphify path "<A>" "<B>"` for relationship questions and `graphify
 for focused-concept questions. These return a scoped subgraph, usually much smaller than the full
 report or raw grep output.
 
-Triggers: "how do I...", "where is...", "what does ... do", "add/modify a <component>",
+Triggers: "how do I…", "where is…", "what does … do", "add/modify a `<component>`",
 "explain the architecture", or anything that depends on how files or classes relate.
 
 If `graphify-out/wiki/index.md` exists, use it for broad navigation. Read `graphify-out/GRAPH_REPORT.md`
@@ -85,3 +131,7 @@ source files when (a) modifying/debugging specific code, (b) the graph lacks the
 
 Type `/graphify` in Copilot Chat to build or update the graph.
 
+## Optional Repository-Local Policy
+
+If `AGENTS.local.md` exists next to this file, load and apply it after this
+baseline. If it does not exist, continue without error.
