@@ -1,44 +1,80 @@
-# Global Copilot Instructions
+# GitHub.com Copilot Code Review
 
-You are an expert software/platform engineer. Optimize for secure, consistent, and readable changes.
+This file is only for GitHub.com Copilot code review.
 
-## Language policy
-- User chat can be Italian.
-- Everything in the repository must be English: code, comments, logs, CLI output, docs, commit/PR text, and configuration files.
+It is not a general task-execution guide, repository routing guide, planning
+workflow, or local agent runtime contract.
 
-## Instruction order
-1. Read local `AGENTS.md` first.
-2. Apply `.github/copilot-code-review-instructions.md` and `.github/copilot-commit-message-instructions.md` when relevant.
-3. Use `.github/repo-profiles.yml` as optional profile guidance for stack-specific setup.
-4. Apply matching `.github/instructions/*.instructions.md`.
-5. Use `.github/prompts/*.prompt.md` for repeatable tasks.
-6. Use `.github/skills/*/SKILL.md` for implementation patterns.
+## Review Objective
 
-## Non-negotiables
-- Least privilege.
-- No hardcoded secrets.
-- Preserve existing conventions.
-- Prefer early return/guard clauses.
-- Prioritize readability over clever abstractions.
-- In Terraform, prefer string interpolation over `format()` unless `format()` is strictly required.
-- Update technical docs in English when behavior changes.
+Review changed files for defects that matter before merge.
 
-## Portability
-- This configuration is intentionally reusable across different repositories and tech stacks.
-- Apply only the instruction files relevant to the files being changed.
-- Follow `.github/security-baseline.md` and `.github/DEPRECATION.md` when introducing structural changes.
+- Prioritize correctness, security, regressions, missing validation, and
+  maintainability.
+- Prefer actionable findings over broad advice.
+- Tie each finding to concrete changed-file evidence.
+- Do not restate repository policy unless the diff creates a specific risk.
 
-## Validation baseline
-- Terraform: `terraform fmt` and `terraform validate`.
-- Bash: `bash -n` and `shellcheck -s bash` (if available).
-- Python/Java/Node.js: run unit tests relevant to the change.
-- Run `.github/scripts/validate-copilot-customizations.sh` for customization changes.
+## Finding Priority
 
-## GitHub Operations
-- When asked to "create", "write", or "summarize" a Pull Request, always attempt to update the remote description using the GitHub CLI (`gh`).
-- Use the `gh pr edit <number> --body-file <temp_file>` pattern for robust multi-line updates.
-- Verify the active PR number before proceeding.
+Use these buckets when reporting issues:
 
-## IDVH addendum
-- For `IDVH/**`, enforce `.github/instructions/idvh.instructions.md` and the `idvh-terraform` skill.
-- See those files for all IDVH-specific rules; do not duplicate them here.
+- `Critical`: data loss, credential exposure, remote code execution, production
+  outage, or a merge-blocking contract break.
+- `Major`: correctness bugs, security weaknesses, broken validators, missing
+  required tests, or behavior regressions.
+- `Minor`: maintainability, edge-case, resilience, or observability issues that
+  should be fixed before merge when practical.
+- `Nit`: small clarity or style issues that are safe to ignore.
+- `Notes`: useful context that is not a defect.
+
+## Required Checks
+
+- Check for hardcoded secrets, credentials, keys, tokens, and tenant-sensitive
+  values.
+- Check least privilege, destructive behavior controls, unsafe execution paths,
+  and missing input validation.
+- Check whether changed behavior has appropriate tests, fixtures, docs, or
+  validators.
+- Check contract alignment for changed schemas, generated assets, sync behavior,
+  prompts, instructions, skills, scripts, and CI workflows.
+- Check that fixes are scoped to the requested behavior and do not rewrite large
+  unaffected areas.
+
+## Review Discipline
+
+- Report findings first, ordered by severity.
+- For each finding, include the file or changed area, impact, and a concrete fix
+  direction.
+- Avoid speculative findings when the diff does not provide enough evidence.
+- Avoid praise, summaries, or style-only comments unless they reveal a real
+  maintenance risk.
+- Escalate repeated instances of the same defect pattern when the repetition
+  increases risk.
+
+## Non-Scope
+
+- Do not provide implementation plans unless the review finding needs fix
+  guidance.
+- Do not ask the author to follow local runtime workflows that GitHub.com cannot
+  execute.
+- Do not treat this file as instructions for coding agents, local CLIs, or
+  non-review Copilot chat behavior.
+
+## graphify
+
+For any question about this repo's architecture, structure, components, or how to add/modify/find
+code, your first action should be `graphify query "<question>"` when `graphify-out/graph.json`
+exists. Use `graphify path "<A>" "<B>"` for relationship questions and `graphify explain "<concept>"`
+for focused-concept questions. These return a scoped subgraph, usually much smaller than the full
+report or raw grep output.
+
+Triggers: "how do I…", "where is…", "what does … do", "add/modify a <component>",
+"explain the architecture", or anything that depends on how files or classes relate.
+
+If `graphify-out/wiki/index.md` exists, use it for broad navigation. Read `graphify-out/GRAPH_REPORT.md`
+only for broad architecture review or when query/path/explain do not surface enough context. Only read
+source files when (a) modifying/debugging specific code, (b) the graph lacks the needed detail, or
+(c) the graph is missing or stale.
+
+Type `/graphify` in Copilot Chat to build or update the graph.
