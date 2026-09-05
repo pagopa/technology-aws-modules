@@ -1,1 +1,0 @@
-../../.scripts/terraform_idvh_test.sh
