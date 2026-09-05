@@ -1,37 +1,50 @@
 # .github Configuration
 
-This folder contains global Copilot/Codex customization that can be reused across repositories.
+This folder contains the Copilot customization source and GitHub automation currently present in this repository.
+
+## Contents
+
+- [Structure](#structure)
+- [Maintenance workflow](#maintenance-workflow)
+- [Validation](#validation)
+- [Related documentation](#related-documentation)
 
 ## Structure
-- `copilot-instructions.md`: global baseline rules
-- `copilot-commit-message-instructions.md`: commit message policy
-- `copilot-code-review-instructions.md`: review policy
-- `repo-profiles.yml`: reusable high-level profile catalog for different repo types
-- `security-baseline.md`: portable security baseline checklist
-- `DEPRECATION.md`: lifecycle policy for prompts/skills/instructions/agents
-- `instructions/`: path-specific auto-applied rules
-- `prompts/`: reusable slash prompts
-- `skills/`: reusable implementation capabilities
-- `agents/`: optional custom chat agents
-- `scripts/`: validation scripts
-- `workflows/`: CI validation workflows
-- `templates/`: reusable templates (for example `AGENTS.md`)
 
-## Agent routing
-- Read-only agents: `Planner`, `Reviewer`, `SecurityReviewer`, `WorkflowSupplyChain`, `TerraformGuardrails`, `IAMLeastPrivilege`
-- Write-capable agent: `Implementer`
-
-See `.github/agents/README.md` for details.
+| Path | Responsibility | Notes |
+| --- | --- | --- |
+| `copilot-instructions.md` | Global Copilot review baseline | Applies to GitHub.com Copilot code review. |
+| `instructions/` | Path-specific instruction files | The current set covers repository and language/tool conventions. |
+| `scripts/` | Bootstrap and validation entrypoints | See [scripts/README.md](scripts/README.md). |
+| `workflows/` | GitHub Actions automation | Includes pre-commit and pull-request title validation workflows. |
+| `CHANGELOG.md` | Historical customization record | Use the existing entry format for notable changes. |
+| `CODEOWNERS` | Ownership baseline for `.github` | Current owner is a placeholder team. |
+| `dependabot.yml` | Dependency update configuration | Declares GitHub Actions, pip, npm, and Terraform ecosystems. |
 
 ## Maintenance workflow
-1. Update files under `.github/`.
-2. Run `.github/scripts/validate-copilot-customizations.sh --scope root --mode strict`.
-3. Optional: generate a machine-readable summary with `.github/scripts/validate-copilot-customizations.sh --scope root --mode strict --report json --report-file /tmp/copilot-report.json`.
-4. Optional: bootstrap this configuration into another repository with `.github/scripts/bootstrap-copilot-config.sh --target <repo-path>` (default excludes apply; see `.github/.bootstrap-ignore`).
-5. Optionally run cross-repo assessment with `.github/scripts/validate-copilot-customizations.sh --scope all --mode legacy-compatible`.
-6. Ensure workflow checks pass.
-7. Update `.github/CHANGELOG.md` for notable changes.
 
-## Notes
-- `repo-profiles.yml` is currently advisory (human-readable profile catalog).
-- Use `templates/copilot-quickstart.md` for a short onboarding flow.
+Update the source asset under `.github/`, run the focused validator, and update [CHANGELOG.md](CHANGELOG.md) for a notable change. To preview synchronization into another repository, use:
+
+```bash
+.github/scripts/bootstrap-copilot-config.sh --target <repo-path>
+```
+
+The bootstrap script defaults to a dry run and applies the source ignore file. Use `--apply` only when the target is known and the resulting scope is intended.
+
+## Validation
+
+Run the validator from the repository root:
+
+```bash
+.github/scripts/validate-copilot-customizations.sh --scope root --mode strict
+```
+
+The `_pre-commit.yml` workflow runs the configured pre-commit hooks in a pinned container. The validator and workflow are separate checks with different coverage.
+
+## Related documentation
+
+- [Root repository README](../README.md)
+- [Repository architecture](../docs/architecture.md)
+- [Repository context](../CONTEXT.md)
+
+No diagram is provided because the repository-wide relationships are owned by [../docs/architecture.md](../docs/architecture.md).

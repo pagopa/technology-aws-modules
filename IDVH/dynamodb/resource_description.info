@@ -1,1 +1,0 @@
-KMS key rotation enabled: {kms_ssm_enable_rotation}, KMS rotation period: {kms_rotation_period_in_days} days
