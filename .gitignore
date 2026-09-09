@@ -31,7 +31,6 @@ htmlcov/
 # Terraform
 .terraform/
 **/.terraform/
-.terraform.lock.hcl
 *.tfstate
 *.tfstate.*
 crash.log
