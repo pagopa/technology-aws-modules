@@ -103,6 +103,8 @@ repos:
           - --hook-config=--parallelism-limit=1
           - --hook-config=--retry-once-with-cleanup=true
           - --init-args=-backend=false
+          # Lockfiles are committed per Terraform root to keep provider
+          # selection reproducible on developer machines and in CI.
           - --init-args=-lockfile=readonly
           # Avoid raw JSON diagnostics: the hook already switches to JSON internally
           # only when it needs structured retry/error matching.
