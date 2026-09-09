@@ -1,7 +1,3 @@
-IDH_AZURE/
-modules_oneidentity/
-.DS_Store
-
 # Python
 __pycache__/
 *.py[cod]
@@ -51,3 +47,7 @@ override.tf.json
 .terragrunt-cache/
 tmp/*
 tmp
+IDH_AZURE/
+modules_oneidentity/
+.DS_Store
+.idea
