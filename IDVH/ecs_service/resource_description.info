@@ -1,0 +1,1 @@
+CPU: {cpu}, memory: {memory}, autoscaling: {autoscaling_min_capacity}-{autoscaling_max_capacity}, event mode: {event_mode}

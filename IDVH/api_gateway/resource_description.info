@@ -1,0 +1,1 @@
+Endpoint: {endpoint_configuration_types}, stage: {stage_name}, xray: {xray_tracing_enabled}, plan rate: {plan_throttle_rate_limit}, custom domain: {custom_domain_create}

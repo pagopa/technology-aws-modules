@@ -1,0 +1,6 @@
+standard:
+  enable_container_insights: true
+  default_capacity_provider_strategy:
+    FARGATE:
+      weight: 100
+      base: 1

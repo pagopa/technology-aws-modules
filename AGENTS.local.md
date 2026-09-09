@@ -36,6 +36,13 @@ as consumer-repository defaults without an explicit sync contract change.
   content used to generate the global home agent baseline.
 - Source-managed AI assets live mainly under `.github/`.
 
+## IDVH Protection
+
+- `IDVH/` is a critical infrastructure directory and must be preserved.
+- Deleting any file or directory under `IDVH/` requires explicit authorization
+  from the user in the current conversation. Without that authorization,
+  preserve the existing contents and stop before performing the deletion.
+
 ## Standards Repository Validation
 
 - Run `make token-risks` or
