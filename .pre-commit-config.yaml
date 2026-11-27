@@ -97,6 +97,8 @@ repos:
           - --hook-config=--create-file-if-not-exist=true
           - --args=--sort-by=required
       - id: terraform_validate # Validate Terraform configuration without remote backends.
+        # Modules requiring caller-owned aliases are validated through their fixture below.
+        exclude: '^IDVH/aws-backup/([^/]+\.tf|\.terraform\.lock\.hcl)$'
         verbose: true
         args:
           # Keep logs deterministic and readable when validate fails in CI.
@@ -120,3 +122,12 @@ repos:
       #     - --args=-platform=darwin_arm64
       #     - --args=-platform=linux_amd64
       #     - --args=-platform=linux_arm64
+
+  - repo: local
+    hooks:
+      - id: terraform_validate_aws_backup
+        name: Terraform validate AWS Backup consumer
+        entry: env TF_CLI_ARGS_init=-lockfile=readonly bash IDVH/aws-backup/terraform.sh --module-dir IDVH/aws-backup/tests/fixtures/consumer --skip-tests
+        language: system
+        pass_filenames: false
+        files: '^IDVH/aws-backup/([^/]+\.tf|\.terraform\.lock\.hcl)$'
