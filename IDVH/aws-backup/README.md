@@ -399,6 +399,8 @@ Implementation, runtime tests and advanced features remain owned by the
 The tests here cover the wrapper's catalog integration and input contract.
 The consumer fixture supplies provider aliases for static validation; direct
 validation of an unconfigured module with `aws.dr` cannot resolve that alias.
+Pre-commit validates wrapper changes through this fixture with a read-only
+dependency lockfile.
 It pins AWS 5.72.0 and Archive 2.4.0 to exercise the minimum provider composition.
 Mocked Terraform applies do not contact AWS and do not certify recoverability,
 IAM authorization, regional service behavior or email delivery.
@@ -412,3 +414,89 @@ review and approval.
 When upgrading the source library, update both Git refs together and rerun the
 wrapper tests. Terraform downloads dependencies under `.terraform/`; these
 generated downloads are not authored module copies and must not be committed.
+
+<!-- BEGIN_TF_DOCS -->
+## Requirements
+
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.14.3 |
+| <a name="requirement_archive"></a> [archive](#requirement\_archive) | >= 2.4.0, < 3.0.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.72.0, < 6.0.0 |
+
+## Providers
+
+| Name | Version |
+|------|---------|
+| <a name="provider_terraform"></a> [terraform](#provider\_terraform) | n/a |
+
+## Modules
+
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_alerting"></a> [alerting](#module\_alerting) | git::https://github.com/pagopa/eng-cloud-strategy-hub.git//terraform/aws/modules/terraform-aws-backup-alerting | d30c3641dcb68628d9a67f1807ec4c06f3772064 |
+| <a name="module_backup"></a> [backup](#module\_backup) | git::https://github.com/pagopa/eng-cloud-strategy-hub.git//terraform/aws/modules/terraform-aws-backup | d30c3641dcb68628d9a67f1807ec4c06f3772064 |
+| <a name="module_idvh_loader"></a> [idvh\_loader](#module\_idvh\_loader) | ../01_idvh_loader | n/a |
+
+## Resources
+
+| Name | Type |
+|------|------|
+| [terraform_data.catalog](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/resources/data) | resource |
+
+## Inputs
+
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_aws_region"></a> [aws\_region](#input\_aws\_region) | Primary region matching the caller's aws provider. | `string` | n/a | yes |
+| <a name="input_env"></a> [env](#input\_env) | Catalog environment: dev, uat or prod. | `string` | n/a | yes |
+| <a name="input_product_name"></a> [product\_name](#input\_product\_name) | Catalog name, independent of the workload name. | `string` | n/a | yes |
+| <a name="input_selection_tags"></a> [selection\_tags](#input\_selection\_tags) | Snapshot selection tags forwarded unchanged to Backup, where multiple tags match with OR semantics. | `map(string)` | n/a | yes |
+| <a name="input_solution_prefix"></a> [solution\_prefix](#input\_solution\_prefix) | Unique resource prefix forwarded unchanged. Source modules enforce their generated-name limits. | `string` | n/a | yes |
+| <a name="input_additional_kms_key_ids"></a> [additional\_kms\_key\_ids](#input\_additional\_kms\_key\_ids) | Workload key IDs or ARNs to monitor in addition to the backup primary and DR keys. | `list(string)` | `[]` | no |
+| <a name="input_backup_schedule"></a> [backup\_schedule](#input\_backup\_schedule) | Override the catalog snapshot cron schedule. | `string` | `null` | no |
+| <a name="input_backup_window_minutes"></a> [backup\_window\_minutes](#input\_backup\_window\_minutes) | Override the catalog snapshot start window in whole minutes. | `number` | `null` | no |
+| <a name="input_continuous_backup_selection_tags"></a> [continuous\_backup\_selection\_tags](#input\_continuous\_backup\_selection\_tags) | Dedicated tags for supported continuous-backup resources. Required when PITR is enabled. | `map(string)` | `null` | no |
+| <a name="input_continuous_retention_days"></a> [continuous\_retention\_days](#input\_continuous\_retention\_days) | Override the catalog PITR retention, independently of snapshot retention. | `number` | `null` | no |
+| <a name="input_copy_retention_days"></a> [copy\_retention\_days](#input\_copy\_retention\_days) | Override catalog DR copy retention in whole days. | `number` | `null` | no |
+| <a name="input_coverage_expected_resource_tags"></a> [coverage\_expected\_resource\_tags](#input\_coverage\_expected\_resource\_tags) | Independent coverage inventory tags, matched with AND semantics. Required when coverage is enabled. | `map(string)` | `{}` | no |
+| <a name="input_coverage_policy"></a> [coverage\_policy](#input\_coverage\_policy) | Replace the catalog coverage policy; the whole object is overridden, not merged. | <pre>object({<br/>    max_backup_age_seconds      = number<br/>    freshness_tolerance_seconds = number<br/>    initial_grace_seconds       = number<br/>    reminder_interval_seconds   = number<br/>    schedule                    = string<br/>  })</pre> | `null` | no |
+| <a name="input_coverage_resource_types"></a> [coverage\_resource\_types](#input\_coverage\_resource\_types) | Replace catalog coverage inventory types: DynamoDB and/or S3. | `set(string)` | `null` | no |
+| <a name="input_default_plan_additional_rules"></a> [default\_plan\_additional\_rules](#input\_default\_plan\_additional\_rules) | Replace the catalog additional rules. An empty list explicitly disables catalog additional rules. | <pre>list(object({<br/>    rule_name               = string<br/>    schedule                = string<br/>    start_window            = optional(number)<br/>    completion_window       = optional(number)<br/>    cold_storage_after      = optional(number, 0)<br/>    delete_after            = number<br/>    recovery_point_tags     = optional(map(string), {})<br/>    copy_to_dr              = optional(bool)<br/>    copy_cold_storage_after = optional(number)<br/>    copy_delete_after       = optional(number)<br/>  }))</pre> | `null` | no |
+| <a name="input_dr_region"></a> [dr\_region](#input\_dr\_region) | Override the catalog DR region. Must match aws.dr and differ from aws\_region in prod. | `string` | `null` | no |
+| <a name="input_email_endpoints"></a> [email\_endpoints](#input\_email\_endpoints) | Backup notification recipients; each must confirm its SNS subscription. | `list(string)` | `[]` | no |
+| <a name="input_enable_alerting"></a> [enable\_alerting](#input\_enable\_alerting) | Override catalog alerting activation. False disables Alerting and its Coverage scanner. | `bool` | `null` | no |
+| <a name="input_enable_backup_coverage"></a> [enable\_backup\_coverage](#input\_enable\_backup\_coverage) | Override catalog coverage activation. False retains event-only alerting. | `bool` | `null` | no |
+| <a name="input_enable_backup_failure_alerts"></a> [enable\_backup\_failure\_alerts](#input\_enable\_backup\_failure\_alerts) | Override catalog backup failure event alerts. | `bool` | `null` | no |
+| <a name="input_enable_continuous_backup"></a> [enable\_continuous\_backup](#input\_enable\_continuous\_backup) | Override catalog continuous-backup activation. False is an explicit override. | `bool` | `null` | no |
+| <a name="input_enable_kms_deletion_alert"></a> [enable\_kms\_deletion\_alert](#input\_enable\_kms\_deletion\_alert) | Override catalog key deletion event alerts. | `bool` | `null` | no |
+| <a name="input_enable_restore_testing"></a> [enable\_restore\_testing](#input\_enable\_restore\_testing) | Override catalog restore-testing activation. False is an explicit override. | `bool` | `null` | no |
+| <a name="input_idvh_resource_tier"></a> [idvh\_resource\_tier](#input\_idvh\_resource\_tier) | Policy tier in the selected catalog. | `string` | `"standard"` | no |
+| <a name="input_restore_testing_max_duration"></a> [restore\_testing\_max\_duration](#input\_restore\_testing\_max\_duration) | Override the catalog restore validation duration in hours. | `number` | `null` | no |
+| <a name="input_restore_testing_resource_types"></a> [restore\_testing\_resource\_types](#input\_restore\_testing\_resource\_types) | Replace catalog restore-testing resource types. | `list(string)` | `null` | no |
+| <a name="input_restore_testing_schedule"></a> [restore\_testing\_schedule](#input\_restore\_testing\_schedule) | Override the catalog restore-testing cron schedule. | `string` | `null` | no |
+| <a name="input_restore_testing_start_window"></a> [restore\_testing\_start\_window](#input\_restore\_testing\_start\_window) | Override the catalog restore-testing start window in minutes. | `number` | `null` | no |
+| <a name="input_retention_days"></a> [retention\_days](#input\_retention\_days) | Override catalog snapshot retention in whole days. | `number` | `null` | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | Infrastructure tags forwarded unchanged. Scanner infrastructure must not match the expected workload inventory. | `map(string)` | `{}` | no |
+| <a name="input_vault_lock_changeable_for_days"></a> [vault\_lock\_changeable\_for\_days](#input\_vault\_lock\_changeable\_for\_days) | Override the catalog COMPLIANCE cooling-off period. | `number` | `null` | no |
+| <a name="input_vault_lock_max_retention_days"></a> [vault\_lock\_max\_retention\_days](#input\_vault\_lock\_max\_retention\_days) | Override the catalog maximum Vault Lock retention. | `number` | `null` | no |
+| <a name="input_vault_lock_min_retention_days"></a> [vault\_lock\_min\_retention\_days](#input\_vault\_lock\_min\_retention\_days) | Override the catalog minimum Vault Lock retention for both vaults. | `number` | `null` | no |
+| <a name="input_vault_lock_mode"></a> [vault\_lock\_mode](#input\_vault\_lock\_mode) | Override catalog Vault Lock mode. COMPLIANCE is explicit opt-in and becomes immutable. | `string` | `null` | no |
+
+## Outputs
+
+| Name | Description |
+|------|-------------|
+| <a name="output_backup_plan_arn"></a> [backup\_plan\_arn](#output\_backup\_plan\_arn) | Scheduled snapshot backup plan ARN. |
+| <a name="output_continuous_plan_id"></a> [continuous\_plan\_id](#output\_continuous\_plan\_id) | Continuous backup plan ID, or null when disabled. |
+| <a name="output_coverage_lambda_function_arn"></a> [coverage\_lambda\_function\_arn](#output\_coverage\_lambda\_function\_arn) | Coverage scanner ARN, or null when the catalog disables it. |
+| <a name="output_dr_kms_key_id"></a> [dr\_kms\_key\_id](#output\_dr\_kms\_key\_id) | DR vault KMS key ID, or null outside production. |
+| <a name="output_dr_vault_arn"></a> [dr\_vault\_arn](#output\_dr\_vault\_arn) | DR vault ARN, or null outside production. |
+| <a name="output_effective_config"></a> [effective\_config](#output\_effective\_config) | Catalog policy after explicit consumer overrides. |
+| <a name="output_idvh_tier_config"></a> [idvh\_tier\_config](#output\_idvh\_tier\_config) | Selected catalog policy. |
+| <a name="output_kms_key_id"></a> [kms\_key\_id](#output\_kms\_key\_id) | Primary vault KMS key ID. |
+| <a name="output_restore_testing_plan_arn"></a> [restore\_testing\_plan\_arn](#output\_restore\_testing\_plan\_arn) | Restore testing plan ARN, or null when disabled. |
+| <a name="output_sns_topic_arn"></a> [sns\_topic\_arn](#output\_sns\_topic\_arn) | Encrypted backup notification topic ARN. |
+| <a name="output_vault_arn"></a> [vault\_arn](#output\_vault\_arn) | Primary backup vault ARN. |
+| <a name="output_vault_name"></a> [vault\_name](#output\_vault\_name) | Primary backup vault name. |
+<!-- END_TF_DOCS -->
