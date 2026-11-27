@@ -1,0 +1,1 @@
+Snapshot retention: {retention_days} days; GOVERNANCE minimum: {vault_lock_min_retention_days} days; coverage enabled: {enable_backup_coverage}

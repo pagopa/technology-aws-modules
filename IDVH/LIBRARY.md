@@ -3,6 +3,7 @@
 | Module | Documentation |
 |-----------|------------------|
 | api_gateway | [README](api_gateway/README.md) |
+| aws-backup | [README](aws-backup/README.md) |
 | dynamodb | [README](dynamodb/README.md) |
 | ecr | [README](ecr/README.md) |
 | ecs | [README](ecs/README.md) |

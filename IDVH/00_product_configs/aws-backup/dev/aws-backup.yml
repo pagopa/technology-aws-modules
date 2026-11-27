@@ -1,0 +1,29 @@
+standard:
+  dr_region: null
+  retention_days: 7
+  copy_retention_days: 7
+  backup_schedule: "cron(0 1 * * ? *)"
+  backup_window_minutes: 480
+  vault_lock_mode: GOVERNANCE
+  vault_lock_min_retention_days: 1
+  vault_lock_max_retention_days: 3650
+  vault_lock_changeable_for_days: 3
+  default_plan_additional_rules: []
+  enable_continuous_backup: false
+  continuous_retention_days: 7
+  enable_restore_testing: false
+  restore_testing_resource_types: [DynamoDB, EBS, RDS, S3, EFS]
+  restore_testing_schedule: "cron(0 3 ? * SAT *)"
+  restore_testing_start_window: 480
+  restore_testing_max_duration: 24
+  enable_alerting: true
+  enable_backup_failure_alerts: true
+  enable_kms_deletion_alert: true
+  enable_backup_coverage: true
+  coverage_resource_types: [DynamoDB, S3]
+  coverage_policy:
+    max_backup_age_seconds: 172800
+    freshness_tolerance_seconds: 14400
+    initial_grace_seconds: 259200
+    reminder_interval_seconds: 172800
+    schedule: "rate(1 hour)"
